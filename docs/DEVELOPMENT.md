@@ -11,6 +11,19 @@ Before you begin, ensure you have the following installed:
 - **Docker** and **Docker Compose** - [Download](https://docker.com/get-started)
 - **Git** - [Download](https://git-scm.com/)
 
+## Security Setup
+
+⚠️ **Important**: Before running the application, create secure environment variables:
+
+```bash
+# Copy environment template
+cp .env.example .env
+
+# Edit .env file with secure values
+# - Change POSTGRES_PASSWORD to a strong password
+# - Change JWT_SECRET to a secure random string
+```
+
 ## Quick Start (Recommended)
 
 The easiest way to get started is using Docker Compose:
@@ -43,7 +56,7 @@ docker-compose up -d postgres
 The database will be available at `localhost:5432` with:
 - Database: `cycleshare`
 - Username: `postgres`
-- Password: `postgres`
+- Password: (set via environment variable)
 
 ### 2. Backend Setup
 
@@ -91,7 +104,7 @@ Copy `backend/.env.example` to `backend/.env` and update:
 
 ```env
 # Database
-DATABASE_URL=postgresql://postgres:postgres@localhost:5432/cycleshare
+DATABASE_URL=postgresql://postgres:your_secure_password@localhost:5432/cycleshare
 
 # Redis (for caching and sessions)
 REDIS_URL=redis://localhost:6379
@@ -304,6 +317,69 @@ cycleshare-app/
 5. Commit your changes: `git commit -m 'Add amazing feature'`
 6. Push to branch: `git push origin feature/amazing-feature`
 7. Open a Pull Request
+
+## Phase 1 Progress Update
+
+### ✅ Recently Completed
+
+**Task 1: Real Routing API Integration** - COMPLETED
+- ✅ OpenRouteService API integration with cycling-specific profiles
+- ✅ Environment variable configuration for API keys
+- ✅ Enhanced error handling and fallback routing
+- ✅ Route information display (distance, duration, elevation)
+- ✅ Waypoint management (add/remove functionality)
+- ✅ Cycling-optimized routing (avoids highways, prefers quiet roads)
+
+### 🔄 Current Features
+
+1. **Interactive Route Planning**
+   - Click on map to add waypoints
+   - Generate cycling-optimized routes
+   - View route statistics (distance, time, elevation)
+   - Remove individual waypoints
+   - Clear all waypoints
+
+2. **Routing Intelligence**
+   - OpenRouteService integration for real routing
+   - Cycling-specific preferences (avoid highways, prefer quiet roads)
+   - Elevation profile support
+   - Graceful fallback to straight-line routing
+
+3. **User Interface**
+   - Material-UI components with responsive design
+   - Real-time route updates
+   - Loading states and error handling
+   - Route details panel
+
+### 🚀 Next Phase 1 Tasks
+
+**Task 2: User Authentication** (Next)
+- Login/Register UI components
+- JWT token management
+- Protected routes
+
+**Task 3: Route Saving**
+- Save routes to database
+- Route management interface
+- User route history
+
+### API Configuration
+
+To get real routing (instead of straight-line fallback):
+1. Sign up for free at https://openrouteservice.org/
+2. Add your API key to `frontend/.env`:
+   ```
+   VITE_OPENROUTESERVICE_API_KEY=your-api-key-here
+   ```
+
+### Testing the Route Planner
+
+1. Start the frontend: `cd frontend && npm run dev`
+2. Open http://localhost:3000
+3. Click on the map to add waypoints
+4. Click "Generate Route" to see cycling-optimized routing
+5. View route details in the sidebar
+6. Test waypoint removal and clearing
 
 ## Next Steps
 

@@ -5,9 +5,9 @@ services:
     image: postgis/postgis:15-3.3
     container_name: cycleshare-postgres
     environment:
-      POSTGRES_DB: cycleshare
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ${POSTGRES_DB:-cycleshare}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change_me_please}
     ports:
       - "5432:5432"
     volumes:
@@ -41,9 +41,9 @@ services:
       redis:
         condition: service_healthy
     environment:
-      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/cycleshare
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-change_me_please}@postgres:5432/${POSTGRES_DB:-cycleshare}
       REDIS_URL: redis://redis:6379
-      JWT_SECRET: your-secret-key-here
+      JWT_SECRET: ${JWT_SECRET:-change_me_please}
       ENVIRONMENT: development
     ports:
       - "8000:8000"

@@ -1,7 +1,23 @@
-import { Box, Button, FormControlLabel, Switch, Typography, Slider } from '@mui/material'
-import { PlayArrowOutlined, SaveOutlined, ShareOutlined } from '@mui/icons-material'
+import { Box, Button, FormControlLabel, Switch, Typography, Slider, Alert, CircularProgress } from '@mui/material'
+import { PlayArrowOutlined, SaveOutlined, ShareOutlined, ClearOutlined } from '@mui/icons-material'
+import { useRoute } from '../contexts/RouteContext'
 
 const PlannerControls = () => {
+  const { generateRoute, waypoints, isLoading, error, clearRoute } = useRoute()
+
+  const handleGenerateRoute = async () => {
+    console.log('Generate route button clicked')
+    await generateRoute()
+  }
+
+  const handleSaveRoute = () => {
+    alert('Save functionality coming soon!')
+  }
+
+  const handleShareRoute = () => {
+    alert('Collaboration features coming soon!')
+  }
+
   return (
     <Box sx={{ mb: 2 }}>
       <Typography variant="subtitle1" gutterBottom>
@@ -34,19 +50,28 @@ const PlannerControls = () => {
         />
       </Box>
       
+      {error && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {error}
+        </Alert>
+      )}
+      
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
         <Button
           variant="contained"
-          startIcon={<PlayArrowOutlined />}
+          startIcon={isLoading ? <CircularProgress size={16} /> : <PlayArrowOutlined />}
           fullWidth
+          onClick={handleGenerateRoute}
+          disabled={isLoading || waypoints.length < 2}
         >
-          Generate Route
+          {isLoading ? 'Generating...' : 'Generate Route'}
         </Button>
         
         <Button
           variant="outlined"
           startIcon={<SaveOutlined />}
           fullWidth
+          onClick={handleSaveRoute}
         >
           Save Route
         </Button>
@@ -55,8 +80,19 @@ const PlannerControls = () => {
           variant="outlined"
           startIcon={<ShareOutlined />}
           fullWidth
+          onClick={handleShareRoute}
         >
           Share & Collaborate
+        </Button>
+        
+        <Button
+          variant="text"
+          startIcon={<ClearOutlined />}
+          fullWidth
+          onClick={clearRoute}
+          disabled={waypoints.length === 0}
+        >
+          Clear All
         </Button>
       </Box>
     </Box>
