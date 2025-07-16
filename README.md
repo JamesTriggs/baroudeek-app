@@ -1,0 +1,84 @@
+# CycleShare - Collaborative Road Cycling Route Planner
+
+A community-driven collaborative route planning application specifically designed for road cyclists with real-time collaboration features.
+
+## Features
+
+- **Smart Route Planning**: AI-powered algorithm that creates cycling-optimized routes
+- **Real-time Collaboration**: Plan routes together with other cyclists in real-time
+- **Community-Driven**: Crowdsourced road quality ratings and usage heatmaps
+- **Mobile-First**: Responsive design that works on all devices
+- **Offline Capable**: Core features work without internet connection
+
+## Tech Stack
+
+### Frontend
+- React 18 + TypeScript
+- Vite for fast development
+- Leaflet.js for interactive maps
+- Material-UI for consistent design
+- Socket.io for real-time features
+
+### Backend
+- FastAPI (Python) for high-performance API
+- PostgreSQL with PostGIS for spatial data
+- Redis for caching and sessions
+- WebSocket support for real-time collaboration
+
+## Getting Started
+
+### Prerequisites
+- Node.js 18+
+- Python 3.11+
+- Docker and Docker Compose
+- PostgreSQL with PostGIS
+
+### Development Setup
+
+1. Clone the repository:
+```bash
+git clone git@github.com-personal:jamesjtriggs/cycleshare-app.git
+cd cycleshare-app
+```
+
+2. Start the development environment:
+```bash
+docker-compose up -d
+```
+
+3. Install frontend dependencies:
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+4. Install backend dependencies:
+```bash
+cd backend
+pip install -r requirements.txt
+uvicorn app.main:app --reload
+```
+
+## Project Structure
+
+```
+cycleshare-app/
+├── frontend/          # React TypeScript application
+├── backend/           # FastAPI Python application
+├── docs/             # Project documentation
+├── docker-compose.yml # Local development environment
+└── README.md         # This file
+```
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests for new features
+5. Submit a pull request
+
+## License
+
+MIT License - see LICENSE file for details
