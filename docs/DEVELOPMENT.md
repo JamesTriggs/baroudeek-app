@@ -1,0 +1,315 @@
+# Development Setup Guide
+
+This guide will help you set up the CycleShare development environment on your local machine.
+
+## Prerequisites
+
+Before you begin, ensure you have the following installed:
+
+- **Node.js** (v18 or higher) - [Download](https://nodejs.org/)
+- **Python** (v3.11 or higher) - [Download](https://python.org/)
+- **Docker** and **Docker Compose** - [Download](https://docker.com/get-started)
+- **Git** - [Download](https://git-scm.com/)
+
+## Quick Start (Recommended)
+
+The easiest way to get started is using Docker Compose:
+
+```bash
+# Clone the repository
+git clone https://github.com/JamesTriggs/cycleshare-app.git
+cd cycleshare-app
+
+# Start all services
+docker-compose up -d
+
+# Wait for services to be ready, then open your browser to:
+# Frontend: http://localhost:3000
+# Backend API: http://localhost:8000
+# API Documentation: http://localhost:8000/docs
+```
+
+## Manual Setup
+
+If you prefer to run services individually:
+
+### 1. Database Setup
+
+Start PostgreSQL with PostGIS:
+```bash
+docker-compose up -d postgres
+```
+
+The database will be available at `localhost:5432` with:
+- Database: `cycleshare`
+- Username: `postgres`
+- Password: `postgres`
+
+### 2. Backend Setup
+
+```bash
+cd backend
+
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Copy environment file
+cp .env.example .env
+
+# Run the development server
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+```
+
+The backend will be available at `http://localhost:8000`
+
+### 3. Frontend Setup
+
+```bash
+cd frontend
+
+# Install dependencies
+npm install
+
+# Copy environment file
+cp .env.example .env
+
+# Start development server
+npm run dev
+```
+
+The frontend will be available at `http://localhost:3000`
+
+## Environment Configuration
+
+### Backend Environment Variables
+
+Copy `backend/.env.example` to `backend/.env` and update:
+
+```env
+# Database
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/cycleshare
+
+# Redis (for caching and sessions)
+REDIS_URL=redis://localhost:6379
+
+# JWT Configuration
+JWT_SECRET=your-secret-key-here
+
+# API Configuration
+ALLOWED_ORIGINS=["http://localhost:3000"]
+```
+
+### Frontend Environment Variables
+
+Copy `frontend/.env.example` to `frontend/.env` and update:
+
+```env
+# API Configuration
+VITE_API_URL=http://localhost:8000
+
+# Map Configuration
+VITE_DEFAULT_MAP_CENTER_LAT=51.505
+VITE_DEFAULT_MAP_CENTER_LNG=-0.09
+```
+
+## Development Commands
+
+### Frontend Commands
+
+```bash
+cd frontend
+
+# Start development server
+npm run dev
+
+# Build for production
+npm run build
+
+# Run linting
+npm run lint
+
+# Preview production build
+npm run preview
+```
+
+### Backend Commands
+
+```bash
+cd backend
+
+# Start development server
+uvicorn app.main:app --reload
+
+# Run tests
+pytest
+
+# Format code
+black .
+
+# Type checking
+mypy .
+```
+
+### Docker Commands
+
+```bash
+# Start all services
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop all services
+docker-compose down
+
+# Rebuild services
+docker-compose build
+
+# Start individual services
+docker-compose up -d postgres redis
+```
+
+## Database Management
+
+### Database Migrations
+
+The application uses SQLAlchemy with Alembic for database migrations:
+
+```bash
+cd backend
+
+# Generate migration
+alembic revision --autogenerate -m "Description of changes"
+
+# Apply migrations
+alembic upgrade head
+
+# Downgrade migration
+alembic downgrade -1
+```
+
+### Database Seeding
+
+To populate the database with sample data:
+
+```bash
+cd backend
+python -c "from app.db.seed import seed_database; seed_database()"
+```
+
+## API Documentation
+
+Once the backend is running, you can access:
+
+- **Swagger UI**: http://localhost:8000/docs
+- **ReDoc**: http://localhost:8000/redoc
+- **OpenAPI JSON**: http://localhost:8000/openapi.json
+
+## Testing
+
+### Frontend Testing
+
+```bash
+cd frontend
+
+# Run tests
+npm test
+
+# Run tests with coverage
+npm run test:coverage
+```
+
+### Backend Testing
+
+```bash
+cd backend
+
+# Run tests
+pytest
+
+# Run tests with coverage
+pytest --cov=app
+```
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Port Already in Use**
+   - Check if other services are using ports 3000, 8000, 5432, or 6379
+   - Use `lsof -i :PORT` to find processes using specific ports
+
+2. **Database Connection Issues**
+   - Ensure PostgreSQL is running: `docker-compose ps`
+   - Check database logs: `docker-compose logs postgres`
+
+3. **Frontend Build Issues**
+   - Clear node_modules: `rm -rf node_modules && npm install`
+   - Clear npm cache: `npm cache clean --force`
+
+4. **Backend Import Issues**
+   - Ensure virtual environment is activated
+   - Reinstall dependencies: `pip install -r requirements.txt`
+
+### Debug Mode
+
+To enable debug mode:
+
+**Backend:**
+```bash
+export ENVIRONMENT=development
+uvicorn app.main:app --reload --log-level debug
+```
+
+**Frontend:**
+```bash
+export VITE_NODE_ENV=development
+npm run dev
+```
+
+## Architecture Overview
+
+```
+cycleshare-app/
+├── frontend/          # React TypeScript app
+│   ├── src/
+│   │   ├── components/    # Reusable UI components
+│   │   ├── pages/         # Page components
+│   │   ├── services/      # API services
+│   │   ├── store/         # Redux store
+│   │   └── types/         # TypeScript types
+│   └── public/        # Static assets
+├── backend/           # FastAPI Python app
+│   ├── app/
+│   │   ├── api/           # API routes
+│   │   ├── core/          # Core configuration
+│   │   ├── db/            # Database models
+│   │   ├── models/        # SQLAlchemy models
+│   │   ├── schemas/       # Pydantic schemas
+│   │   └── services/      # Business logic
+│   └── tests/         # Test files
+└── docs/              # Documentation
+```
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/amazing-feature`
+3. Make your changes
+4. Run tests: `npm test` and `pytest`
+5. Commit your changes: `git commit -m 'Add amazing feature'`
+6. Push to branch: `git push origin feature/amazing-feature`
+7. Open a Pull Request
+
+## Next Steps
+
+- Check out the [Architecture documentation](ARCHITECTURE.md)
+- Review the [API documentation](http://localhost:8000/docs) when running
+- Explore the codebase starting with `frontend/src/App.tsx` and `backend/app/main.py`
+- Set up your IDE with the recommended extensions for TypeScript and Python
+
+Happy coding! 🚴‍♂️
