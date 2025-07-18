@@ -1,8 +1,8 @@
-# CycleShare Project Specification
+# KOM-map Project Specification
 
 ## Project Overview
 
-CycleShare is a collaborative road cycling route planner that combines advanced routing algorithms with community-driven features to create the ultimate cycling experience.
+KOM-map is a competitive cycling segment discovery and analysis platform that helps cyclists find, plan, and conquer KOM (King of the Mountain) and QOM (Queen of the Mountain) segments using AI-powered analysis and community-driven data.
 
 ## Core Features
 

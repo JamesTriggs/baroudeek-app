@@ -12,29 +12,29 @@ const HomePage = () => {
   const features = [
     {
       icon: <RouteOutlined sx={{ fontSize: 48, color: 'primary.main' }} />,
-      title: 'Smart Route Planning',
-      description: 'AI-powered routes optimized for road cycling with quality road scoring and safety analysis',
+      title: 'KOM Segment Discovery',
+      description: 'AI-powered segment analysis to find the best KOM opportunities on any route with difficulty scoring',
       color: 'primary.main',
     },
     {
       icon: <GroupOutlined sx={{ fontSize: 48, color: 'info.main' }} />,
-      title: 'Real-time Collaboration',
-      description: 'Plan routes together with other cyclists in real-time with live route sharing',
+      title: 'Crown Competition',
+      description: 'Track KOM attempts, compare times with rivals, and plan strategic attacks on segments',
       color: 'info.main',
     },
     {
       icon: <TrendingUpOutlined sx={{ fontSize: 48, color: 'secondary.main' }} />,
-      title: 'Community-Driven',
-      description: 'Crowdsourced road ratings and usage heatmaps from fellow cyclists worldwide',
+      title: 'Performance Analytics',
+      description: 'Detailed segment analysis, power requirements, and optimal conditions for KOM attempts',
       color: 'secondary.main',
     },
   ]
 
   const stats = [
-    { value: '10K+', label: 'Routes Created' },
-    { value: '5K+', label: 'Active Cyclists' },
-    { value: '25K+', label: 'Miles Mapped' },
-    { value: '98%', label: 'Safety Score' },
+    { value: '5K+', label: 'KOM Segments' },
+    { value: '2K+', label: 'Crown Hunters' },
+    { value: '50K+', label: 'KOM Attempts' },
+    { value: '87%', label: 'Success Rate' },
   ]
 
   return (
@@ -91,15 +91,15 @@ const HomePage = () => {
                 mb: 2
               }}
             >
-              RouteFlow
+              KOM-map
             </Typography>
             
             <Typography variant="h4" color="text.secondary" sx={{ mb: 1, fontWeight: 400 }}>
-              The Future of Cycling Routes
+              Your KOM Hunting Command Center
             </Typography>
             
             <Typography variant="h6" color="text.secondary" sx={{ mb: 6, maxWidth: '600px', mx: 'auto', lineHeight: 1.6 }}>
-              Collaborative route planning powered by AI, built for road cyclists who demand the best paths
+              Find, plan, and conquer cycling segments with the ultimate KOM hunting tool built for competitive cyclists
             </Typography>
             
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} justifyContent="center">
@@ -114,7 +114,7 @@ const HomePage = () => {
                   minWidth: 180
                 }}
               >
-                {isAuthenticated ? 'Start Planning' : 'Get Started Free'}
+                {isAuthenticated ? 'Start KOM Hunting' : 'Get Started Free'}
               </Button>
               {!isAuthenticated && (
                 <Button
@@ -166,10 +166,10 @@ const HomePage = () => {
       <Box sx={{ py: 8, bgcolor: 'background.default' }}>
         <Container maxWidth="lg">
           <Typography variant="h2" component="h2" textAlign="center" gutterBottom>
-            Why Choose RouteFlow?
+            Why Choose KOM-map?
           </Typography>
           <Typography variant="h6" color="text.secondary" textAlign="center" sx={{ mb: 6, maxWidth: '600px', mx: 'auto' }}>
-            Advanced features designed by cyclists, for cyclists
+            Advanced segment hunting features designed by competitive cyclists, for KOM chasers
           </Typography>
           
           <Grid container spacing={4}>
@@ -218,11 +218,11 @@ const HomePage = () => {
         <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
           <Box sx={{ textAlign: 'center', maxWidth: '800px', mx: 'auto' }}>
             <Typography variant="h2" component="h2" gutterBottom fontWeight={700}>
-              Ready to Transform Your Rides?
+              Ready to Claim Your Crowns?
             </Typography>
             <Typography variant="h6" sx={{ mb: 4, opacity: 0.9, lineHeight: 1.6 }}>
-              Join thousands of cyclists who trust RouteFlow for their best rides. 
-              Create safer, smarter routes with our AI-powered platform.
+              Join thousands of competitive cyclists who trust KOM-map for their segment hunting. 
+              Find, analyze, and conquer the best KOM opportunities with our AI-powered platform.
             </Typography>
             <Stack direction="row" spacing={2} justifyContent="center">
               <Button 
@@ -237,7 +237,7 @@ const HomePage = () => {
                   fontWeight: 700
                 }}
               >
-                {isAuthenticated ? 'Start Planning Now' : 'Join RouteFlow'}
+                {isAuthenticated ? 'Start KOM Hunting' : 'Join KOM-map'}
               </Button>
             </Stack>
           </Box>

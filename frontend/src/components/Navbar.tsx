@@ -17,7 +17,7 @@ import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from '../store'
 import { logout } from '../store/slices/authSlice'
-import { PedalBike, AccountCircle, ExitToApp, RouteOutlined } from '@mui/icons-material'
+import { PedalBike, AccountCircle, ExitToApp, RouteOutlined, EmojiEventsOutlined } from '@mui/icons-material'
 import { AuthDialog } from './auth'
 
 const Navbar = () => {
@@ -74,7 +74,7 @@ const Navbar = () => {
       <AppBar position="static" elevation={0}>
         <Toolbar sx={{ py: 1 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', mr: 3 }}>
-            <PedalBike sx={{ mr: 1.5, fontSize: '2rem', color: 'primary.main' }} />
+            <EmojiEventsOutlined sx={{ mr: 1.5, fontSize: '2rem', color: '#FFD700' }} />
             <Typography
               variant="h5"
               component="div"
@@ -88,7 +88,7 @@ const Navbar = () => {
               }}
               onClick={() => navigate('/')}
             >
-              RouteFlow
+              KOM-map
             </Typography>
           </Box>
           
@@ -109,7 +109,7 @@ const Navbar = () => {
                     }
                   }}
                 >
-                  Route Planner
+                  KOM Hunter
                 </Button>
                 
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>

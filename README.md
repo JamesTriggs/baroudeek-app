@@ -1,14 +1,14 @@
-# CycleShare - Collaborative Road Cycling Route Planner
+# KOM-map - The Ultimate KOM Hunting Platform
 
-A community-driven collaborative route planning application specifically designed for road cyclists with real-time collaboration features.
+A competitive cycling segment discovery and analysis platform designed for cyclists who chase KOMs (King of the Mountain) and QOMs (Queen of the Mountain).
 
 ## Features
 
-- **Smart Route Planning**: AI-powered algorithm that creates cycling-optimized routes
-- **Real-time Collaboration**: Plan routes together with other cyclists in real-time
-- **Community-Driven**: Crowdsourced road quality ratings and usage heatmaps
-- **Mobile-First**: Responsive design that works on all devices
-- **Offline Capable**: Core features work without internet connection
+- **KOM Segment Discovery**: AI-powered segment analysis to find the best KOM opportunities on any route
+- **Crown Competition**: Track KOM attempts, compare times with rivals, and plan strategic attacks
+- **Performance Analytics**: Detailed segment analysis, power requirements, and optimal conditions for KOM attempts
+- **Mobile-First**: Responsive design optimized for on-the-go segment hunting
+- **Real-time Updates**: Live KOM status tracking and competitor analysis
 
 ## Tech Stack
 
@@ -63,7 +63,7 @@ uvicorn app.main:app --reload
 ## Project Structure
 
 ```
-cycleshare-app/
+kom-map/
 ├── frontend/          # React TypeScript application
 ├── backend/           # FastAPI Python application
 ├── docs/             # Project documentation
