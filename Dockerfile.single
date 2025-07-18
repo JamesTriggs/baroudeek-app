@@ -1,0 +1,73 @@
+# Single container with everything
+FROM node:18-alpine AS frontend-builder
+
+# Build frontend
+WORKDIR /app/frontend
+COPY frontend/package*.json ./
+RUN npm ci
+COPY frontend/ ./
+RUN npm run build
+
+# Main container with backend + frontend
+FROM python:3.11-slim
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    nginx \
+    supervisor \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python dependencies
+WORKDIR /app/backend
+COPY backend/requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy backend code
+COPY backend/ ./
+
+# Copy built frontend
+COPY --from=frontend-builder /app/frontend/dist /var/www/html
+
+# Configure nginx
+COPY <<EOF /etc/nginx/sites-available/default
+server {
+    listen 80;
+    server_name localhost;
+    
+    # Frontend
+    location / {
+        root /var/www/html;
+        index index.html;
+        try_files \$uri \$uri/ /index.html;
+    }
+    
+    # Backend API
+    location /api {
+        proxy_pass http://localhost:8000;
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+    }
+}
+EOF
+
+# Configure supervisor to run both services
+COPY <<EOF /etc/supervisor/conf.d/supervisord.conf
+[supervisord]
+nodaemon=true
+
+[program:nginx]
+command=nginx -g 'daemon off;'
+autostart=true
+autorestart=true
+
+[program:backend]
+command=uvicorn app.main:app --host 127.0.0.1 --port 8000
+directory=/app/backend
+autostart=true
+autorestart=true
+EOF
+
+EXPOSE 80
+
+CMD ["/usr/bin/supervisord"]
