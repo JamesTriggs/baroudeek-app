@@ -38,7 +38,7 @@ class User(Base):
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
     last_active = Column(DateTime(timezone=True), server_default=func.now())
     
-    # Relationships
-    routes = relationship("Route", back_populates="user")
-    road_ratings = relationship("RoadRating", back_populates="user")
-    session_participations = relationship("SessionParticipant", back_populates="user")
+    # Relationships (commented out temporarily to fix circular import)
+    # routes = relationship("Route", back_populates="user")
+    # road_ratings = relationship("RoadRating", back_populates="user")
+    # session_participations = relationship("SessionParticipant", back_populates="user")

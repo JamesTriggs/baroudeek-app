@@ -11,31 +11,50 @@ security = HTTPBearer()
 
 @router.post("/register", response_model=Token)
 async def register(user_data: UserCreate, db: Session = Depends(get_db)):
+    # Debug logging
+    print(f"Registration attempt for email: {user_data.email}")
+    print(f"Username: {user_data.username}")
+    print(f"Full name: {user_data.full_name}")
+    print(f"Bio: {user_data.bio}")
+    
     # Check if user already exists
     existing_user = db.query(User).filter(
         (User.email == user_data.email) | (User.username == user_data.username)
     ).first()
     
     if existing_user:
+        print(f"User already exists: {existing_user.email}")
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="User with this email or username already exists"
         )
     
     # Create new user
+    print("Creating new user...")
     hashed_password = get_password_hash(user_data.password)
+    print(f"Password hashed successfully")
+    
     db_user = User(
         email=user_data.email,
         username=user_data.username,
         full_name=user_data.full_name,
         bio=user_data.bio,
         hashed_password=hashed_password,
-        is_active=user_data.is_active
+        is_active=True  # Default to True for new registrations
     )
     
-    db.add(db_user)
-    db.commit()
-    db.refresh(db_user)
+    try:
+        db.add(db_user)
+        db.commit()
+        db.refresh(db_user)
+        print(f"User created successfully with ID: {db_user.id}")
+    except Exception as e:
+        print(f"Error creating user: {e}")
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Error creating user"
+        )
     
     # Create access token
     access_token = create_access_token(data={"sub": db_user.email})
@@ -63,6 +82,15 @@ async def register(user_data: UserCreate, db: Session = Depends(get_db)):
 async def login(user_credentials: UserLogin, db: Session = Depends(get_db)):
     # Get user by email
     user = db.query(User).filter(User.email == user_credentials.email).first()
+    
+    # Debug logging
+    print(f"Login attempt for email: {user_credentials.email}")
+    print(f"User found: {user is not None}")
+    
+    if user:
+        print(f"User active: {user.is_active}")
+        password_valid = verify_password(user_credentials.password, user.hashed_password)
+        print(f"Password valid: {password_valid}")
     
     if not user or not verify_password(user_credentials.password, user.hashed_password):
         raise HTTPException(

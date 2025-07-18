@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { tokenUtils } from '../utils/tokenUtils'
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
@@ -12,8 +13,15 @@ const api = axios.create({
 // Request interceptor to add auth token
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token')
+    const token = tokenUtils.getToken()
     if (token) {
+      // Check if token is expired
+      if (tokenUtils.isTokenExpired(token)) {
+        tokenUtils.removeToken()
+        window.location.href = '/login'
+        return Promise.reject(new Error('Token expired'))
+      }
+      
       config.headers.Authorization = `Bearer ${token}`
     }
     return config
@@ -26,7 +34,7 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem('token')
+      tokenUtils.removeToken()
       window.location.href = '/login'
     }
     return Promise.reject(error)
@@ -40,7 +48,9 @@ export const authAPI = {
   },
   
   register: async (userData: { email: string; username: string; password: string }) => {
+    console.log('API: Making registration request to /auth/register with:', userData)
     const response = await api.post('/auth/register', userData)
+    console.log('API: Registration response:', response.data)
     return response.data
   },
   
@@ -55,33 +65,56 @@ export const authAPI = {
 }
 
 export const routeAPI = {
+  // Get all user routes
   getRoutes: async () => {
+    console.log('API: Getting user routes')
     const response = await api.get('/routes')
+    console.log('API: Routes response:', response.data)
     return response.data
   },
   
+  // Get specific route by ID
   getRoute: async (id: string) => {
+    console.log('API: Getting route:', id)
     const response = await api.get(`/routes/${id}`)
+    console.log('API: Route response:', response.data)
     return response.data
   },
   
-  createRoute: async (routeData: any) => {
+  // Create new route
+  createRoute: async (routeData: {
+    name: string
+    description?: string
+    waypoints: Array<{id: string, lat: number, lng: number, address?: string}>
+    distance: number
+    estimated_time: number
+    difficulty?: string
+    is_public?: boolean
+    geometry?: string
+  }) => {
+    console.log('API: Creating route with data:', routeData)
     const response = await api.post('/routes', routeData)
+    console.log('API: Route created:', response.data)
     return response.data
   },
   
-  updateRoute: async (id: string, updates: any) => {
+  // Update existing route
+  updateRoute: async (id: string, updates: {
+    name?: string
+    description?: string
+    is_public?: boolean
+  }) => {
+    console.log('API: Updating route:', id, updates)
     const response = await api.put(`/routes/${id}`, updates)
+    console.log('API: Route updated:', response.data)
     return response.data
   },
   
+  // Delete route
   deleteRoute: async (id: string) => {
+    console.log('API: Deleting route:', id)
     await api.delete(`/routes/${id}`)
-  },
-  
-  generateRoute: async (waypoints: any[], preferences: any) => {
-    const response = await api.post('/routes/generate', { waypoints, preferences })
-    return response.data
+    console.log('API: Route deleted successfully')
   },
 }
 

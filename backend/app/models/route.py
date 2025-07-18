@@ -1,7 +1,6 @@
 from sqlalchemy import Column, String, Integer, Float, DateTime, Boolean, ForeignKey, JSON, Text
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
-from geoalchemy2 import Geometry
 from app.db.database import Base
 import uuid
 
@@ -15,8 +14,8 @@ class Route(Base):
     # User who created the route
     user_id = Column(String, ForeignKey("users.id"), nullable=False)
     
-    # Route geometry (LineString)
-    geometry = Column(Geometry("LINESTRING", srid=4326), nullable=True)
+    # Route geometry stored as GeoJSON string for now
+    geometry = Column(Text, nullable=True)  # GeoJSON LineString as text
     
     # Route metrics
     distance = Column(Float, nullable=False)  # in meters
@@ -43,7 +42,6 @@ class Route(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
     
-    # Relationships
-    user = relationship("User", back_populates="routes")
-    waypoints = relationship("Waypoint", back_populates="route", cascade="all, delete-orphan")
-    collaboration_sessions = relationship("CollaborationSession", back_populates="route")
+    # Relationships - using string references to avoid circular imports
+    # Note: User.routes relationship will be added later to avoid circular import
+    waypoints = Column(JSON, default=list)  # Store waypoints as JSON for now

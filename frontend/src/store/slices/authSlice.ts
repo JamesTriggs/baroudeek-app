@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { authAPI } from '../../services/api'
+import { tokenUtils } from '../../utils/tokenUtils'
 
 interface User {
   id: string
@@ -21,7 +22,7 @@ interface AuthState {
 
 const initialState: AuthState = {
   user: null,
-  token: localStorage.getItem('token'),
+  token: tokenUtils.getToken(),
   isLoading: false,
   error: null,
 }
@@ -30,7 +31,7 @@ export const login = createAsyncThunk(
   'auth/login',
   async (credentials: { email: string; password: string }) => {
     const response = await authAPI.login(credentials)
-    localStorage.setItem('token', response.access_token)
+    tokenUtils.setToken(response.access_token)
     return response
   }
 )
@@ -39,14 +40,32 @@ export const register = createAsyncThunk(
   'auth/register',
   async (userData: { email: string; username: string; password: string }) => {
     const response = await authAPI.register(userData)
-    localStorage.setItem('token', response.access_token)
+    tokenUtils.setToken(response.access_token)
     return response
   }
 )
 
 export const logout = createAsyncThunk('auth/logout', async () => {
-  localStorage.removeItem('token')
+  tokenUtils.removeToken()
 })
+
+export const verifyToken = createAsyncThunk(
+  'auth/verifyToken',
+  async (_, { rejectWithValue }) => {
+    try {
+      const token = tokenUtils.getToken()
+      if (!token) {
+        throw new Error('No token found')
+      }
+      
+      const response = await authAPI.me()
+      return { user: response, token }
+    } catch (error) {
+      tokenUtils.removeToken()
+      return rejectWithValue('Token verification failed')
+    }
+  }
+)
 
 const authSlice = createSlice({
   name: 'auth',
@@ -85,6 +104,20 @@ const authSlice = createSlice({
         state.error = action.error.message || 'Registration failed'
       })
       .addCase(logout.fulfilled, (state) => {
+        state.user = null
+        state.token = null
+      })
+      .addCase(verifyToken.pending, (state) => {
+        state.isLoading = true
+        state.error = null
+      })
+      .addCase(verifyToken.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.user = action.payload.user
+        state.token = action.payload.token
+      })
+      .addCase(verifyToken.rejected, (state) => {
+        state.isLoading = false
         state.user = null
         state.token = null
       })
