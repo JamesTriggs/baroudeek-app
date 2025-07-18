@@ -10,13 +10,14 @@ import {
   MenuItem, 
   Divider,
   IconButton,
-  Chip
+  Chip,
+  Fab
 } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from '../store'
 import { logout } from '../store/slices/authSlice'
-import { DirectionsBikeOutlined, AccountCircle, ExitToApp } from '@mui/icons-material'
+import { PedalBike, AccountCircle, ExitToApp, RouteOutlined } from '@mui/icons-material'
 import { AuthDialog } from './auth'
 
 const Navbar = () => {
@@ -70,41 +71,77 @@ const Navbar = () => {
 
   return (
     <>
-      <AppBar position="static" color="primary">
-        <Toolbar>
-          <DirectionsBikeOutlined sx={{ mr: 2 }} />
-          <Typography
-            variant="h6"
-            component="div"
-            sx={{ flexGrow: 1, cursor: 'pointer' }}
-            onClick={() => navigate('/')}
-          >
-            CycleShare
-          </Typography>
+      <AppBar position="static" elevation={0}>
+        <Toolbar sx={{ py: 1 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', mr: 3 }}>
+            <PedalBike sx={{ mr: 1.5, fontSize: '2rem', color: 'primary.main' }} />
+            <Typography
+              variant="h5"
+              component="div"
+              sx={{ 
+                cursor: 'pointer',
+                fontWeight: 700,
+                background: 'linear-gradient(135deg, #006B6B 0%, #4DB6AC 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                letterSpacing: '-0.01em'
+              }}
+              onClick={() => navigate('/')}
+            >
+              RouteFlow
+            </Typography>
+          </Box>
+          
+          <Box sx={{ flexGrow: 1 }} />
           
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             {isAuthenticated ? (
               <>
-                <Button color="inherit" onClick={handleNavigateToPlanner}>
+                <Button 
+                  startIcon={<RouteOutlined />}
+                  onClick={handleNavigateToPlanner}
+                  sx={{ 
+                    color: 'text.primary',
+                    fontWeight: 600,
+                    '&:hover': { 
+                      bgcolor: 'rgba(0, 107, 107, 0.08)',
+                      transform: 'translateY(-1px)'
+                    }
+                  }}
+                >
                   Route Planner
                 </Button>
                 
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                   <Chip
                     label={user.username}
                     variant="outlined"
                     sx={{ 
-                      color: 'white', 
-                      borderColor: 'white',
-                      '& .MuiChip-label': { color: 'white' }
+                      borderColor: 'primary.main',
+                      color: 'primary.main',
+                      fontWeight: 600,
+                      '&:hover': { 
+                        bgcolor: 'rgba(0, 107, 107, 0.08)',
+                        transform: 'translateY(-1px)'
+                      }
                     }}
                   />
                   <IconButton
-                    color="inherit"
                     onClick={handleProfileMenuOpen}
-                    sx={{ padding: 0.5 }}
+                    sx={{ 
+                      padding: 0.5,
+                      '&:hover': { 
+                        transform: 'scale(1.1)'
+                      }
+                    }}
                   >
-                    <Avatar sx={{ width: 32, height: 32, bgcolor: 'secondary.main' }}>
+                    <Avatar sx={{ 
+                      width: 36, 
+                      height: 36, 
+                      bgcolor: 'primary.main',
+                      fontWeight: 600,
+                      boxShadow: '0 4px 12px rgba(0, 107, 107, 0.3)'
+                    }}>
                       {user.username.charAt(0).toUpperCase()}
                     </Avatar>
                   </IconButton>
@@ -115,30 +152,66 @@ const Navbar = () => {
                   open={Boolean(anchorEl)}
                   onClose={handleProfileMenuClose}
                   PaperProps={{
-                    sx: { minWidth: 200 }
+                    sx: { 
+                      minWidth: 200,
+                      borderRadius: 3,
+                      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.12)',
+                      border: '1px solid rgba(0, 0, 0, 0.04)',
+                      mt: 1
+                    }
                   }}
+                  transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                  anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                 >
-                  <MenuItem onClick={handleNavigateToProfile}>
-                    <AccountCircle sx={{ mr: 1 }} />
+                  <MenuItem 
+                    onClick={handleNavigateToProfile}
+                    sx={{ 
+                      py: 1.5,
+                      '&:hover': { 
+                        bgcolor: 'rgba(0, 107, 107, 0.08)'
+                      }
+                    }}
+                  >
+                    <AccountCircle sx={{ mr: 2, color: 'primary.main' }} />
                     Profile
                   </MenuItem>
                   <Divider />
-                  <MenuItem onClick={handleLogout}>
-                    <ExitToApp sx={{ mr: 1 }} />
+                  <MenuItem 
+                    onClick={handleLogout}
+                    sx={{ 
+                      py: 1.5,
+                      '&:hover': { 
+                        bgcolor: 'rgba(255, 87, 34, 0.08)'
+                      }
+                    }}
+                  >
+                    <ExitToApp sx={{ mr: 2, color: 'secondary.main' }} />
                     Logout
                   </MenuItem>
                 </Menu>
               </>
             ) : (
               <>
-                <Button color="inherit" onClick={handleLogin}>
+                <Button 
+                  onClick={handleLogin}
+                  sx={{ 
+                    color: 'text.primary',
+                    fontWeight: 600,
+                    '&:hover': { 
+                      bgcolor: 'rgba(0, 107, 107, 0.08)',
+                      transform: 'translateY(-1px)'
+                    }
+                  }}
+                >
                   Login
                 </Button>
                 <Button 
-                  color="inherit" 
-                  variant="outlined" 
+                  variant="contained"
                   onClick={handleRegister}
-                  sx={{ borderColor: 'white', color: 'white' }}
+                  sx={{ 
+                    fontWeight: 600,
+                    px: 3
+                  }}
                 >
                   Sign Up
                 </Button>
