@@ -1,14 +1,14 @@
-# KOM-map - The Ultimate KOM Hunting Platform
+# Baroudeek - The Ultimate Cycling Adventure Platform
 
-A competitive cycling segment discovery and analysis platform designed for cyclists who chase KOMs (King of the Mountain) and QOMs (Queen of the Mountain).
+A cycling route discovery and adventure platform designed for cyclists who seek new challenges and explore the roads less traveled.
 
 ## Features
 
-- **KOM Segment Discovery**: AI-powered segment analysis to find the best KOM opportunities on any route
-- **Crown Competition**: Track KOM attempts, compare times with rivals, and plan strategic attacks
-- **Performance Analytics**: Detailed segment analysis, power requirements, and optimal conditions for KOM attempts
-- **Mobile-First**: Responsive design optimized for on-the-go segment hunting
-- **Real-time Updates**: Live KOM status tracking and competitor analysis
+- **Route Discovery**: AI-powered route analysis to find the best cycling adventures on any terrain
+- **Adventure Sharing**: Share routes, compare experiences with fellow cyclists, and plan group rides
+- **Performance Analytics**: Detailed route analysis, elevation profiles, and optimal conditions for cycling
+- **Mobile-First**: Responsive design optimized for on-the-go route planning
+- **Real-time Updates**: Live route sharing and cyclist tracking
 
 ## Tech Stack
 
@@ -37,8 +37,8 @@ A competitive cycling segment discovery and analysis platform designed for cycli
 
 1. Clone the repository:
 ```bash
-git clone git@github.com-personal:jamesjtriggs/cycleshare-app.git
-cd cycleshare-app
+git clone git@github.com-personal:jamesjtriggs/baroudeek-app.git
+cd baroudeek-app
 ```
 
 2. Start the development environment:
@@ -63,7 +63,7 @@ uvicorn app.main:app --reload
 ## Project Structure
 
 ```
-kom-map/
+baroudeek/
 ├── frontend/          # React TypeScript application
 ├── backend/           # FastAPI Python application
 ├── docs/             # Project documentation

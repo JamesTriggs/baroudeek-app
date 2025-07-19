@@ -88,7 +88,7 @@ const Navbar = () => {
               }}
               onClick={() => navigate('/')}
             >
-              KOM-map
+              Baroudeek
             </Typography>
           </Box>
           
@@ -109,7 +109,7 @@ const Navbar = () => {
                     }
                   }}
                 >
-                  KOM Hunter
+                  Route Explorer
                 </Button>
                 
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>

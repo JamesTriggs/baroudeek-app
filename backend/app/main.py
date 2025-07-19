@@ -11,8 +11,8 @@ from app.db.database import engine
 # Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
-    title="KOM-map API",
-    description="API for competitive cycling segment discovery and KOM hunting",
+    title="Baroudeek API",
+    description="API for cycling route discovery and adventure platform",
     version="1.0.0",
     docs_url="/docs",
     redoc_url="/redoc"
@@ -37,7 +37,7 @@ app.include_router(routes_simple.router, prefix="/routes", tags=["routes"])
 
 @app.get("/")
 async def root():
-    return {"message": "KOM-map API - Competitive Cycling Segment Discovery and KOM Hunting"}
+    return {"message": "Baroudeek API - Cycling Route Discovery and Adventure Platform"}
 
 @app.get("/health")
 async def health_check():

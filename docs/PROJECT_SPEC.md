@@ -1,8 +1,8 @@
-# KOM-map Project Specification
+# Baroudeek Project Specification
 
 ## Project Overview
 
-KOM-map is a competitive cycling segment discovery and analysis platform that helps cyclists find, plan, and conquer KOM (King of the Mountain) and QOM (Queen of the Mountain) segments using AI-powered analysis and community-driven data.
+Baroudeek is a cycling route discovery and adventure platform that helps cyclists find, plan, and experience cycling routes using AI-powered analysis and community-driven data. The name comes from "baroudeur" - a cycling term for an aggressive, opportunistic rider who seeks adventure.
 
 ## Core Features
 
@@ -318,4 +318,4 @@ GET /api/community/routes/{routeId}/reviews
 
 **Total Development Time: 24 weeks (6 months)**
 
-This specification provides a comprehensive roadmap for building CycleShare into a world-class cycling route planning platform.
+This specification provides a comprehensive roadmap for building Baroudeek into a world-class cycling route planning platform.

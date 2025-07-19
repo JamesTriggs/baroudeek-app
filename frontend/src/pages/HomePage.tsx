@@ -12,28 +12,28 @@ const HomePage = () => {
   const features = [
     {
       icon: <RouteOutlined sx={{ fontSize: 48, color: 'primary.main' }} />,
-      title: 'KOM Segment Discovery',
-      description: 'AI-powered segment analysis to find the best KOM opportunities on any route with difficulty scoring',
+      title: 'Route Discovery',
+      description: 'AI-powered route analysis to find the best cycling adventures on any terrain with difficulty scoring',
       color: 'primary.main',
     },
     {
       icon: <GroupOutlined sx={{ fontSize: 48, color: 'info.main' }} />,
-      title: 'Crown Competition',
-      description: 'Track KOM attempts, compare times with rivals, and plan strategic attacks on segments',
+      title: 'Adventure Sharing',
+      description: 'Share routes, compare experiences with fellow cyclists, and plan group adventures',
       color: 'info.main',
     },
     {
       icon: <TrendingUpOutlined sx={{ fontSize: 48, color: 'secondary.main' }} />,
       title: 'Performance Analytics',
-      description: 'Detailed segment analysis, power requirements, and optimal conditions for KOM attempts',
+      description: 'Detailed route analysis, elevation profiles, and optimal conditions for cycling',
       color: 'secondary.main',
     },
   ]
 
   const stats = [
-    { value: '5K+', label: 'KOM Segments' },
-    { value: '2K+', label: 'Crown Hunters' },
-    { value: '50K+', label: 'KOM Attempts' },
+    { value: '5K+', label: 'Routes' },
+    { value: '2K+', label: 'Adventurers' },
+    { value: '50K+', label: 'Adventures' },
     { value: '87%', label: 'Success Rate' },
   ]
 
@@ -91,15 +91,15 @@ const HomePage = () => {
                 mb: 2
               }}
             >
-              KOM-map
+              Baroudeek
             </Typography>
             
             <Typography variant="h4" color="text.secondary" sx={{ mb: 1, fontWeight: 400 }}>
-              Your KOM Hunting Command Center
+              Your Cycling Adventure Command Center
             </Typography>
             
             <Typography variant="h6" color="text.secondary" sx={{ mb: 6, maxWidth: '600px', mx: 'auto', lineHeight: 1.6 }}>
-              Find, plan, and conquer cycling segments with the ultimate KOM hunting tool built for competitive cyclists
+              Discover, plan, and experience cycling routes with the ultimate adventure platform built for cyclists
             </Typography>
             
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} justifyContent="center">
@@ -114,7 +114,7 @@ const HomePage = () => {
                   minWidth: 180
                 }}
               >
-                {isAuthenticated ? 'Start KOM Hunting' : 'Get Started Free'}
+                {isAuthenticated ? 'Start Exploring' : 'Get Started Free'}
               </Button>
               {!isAuthenticated && (
                 <Button
@@ -166,10 +166,10 @@ const HomePage = () => {
       <Box sx={{ py: 8, bgcolor: 'background.default' }}>
         <Container maxWidth="lg">
           <Typography variant="h2" component="h2" textAlign="center" gutterBottom>
-            Why Choose KOM-map?
+            Why Choose Baroudeek?
           </Typography>
           <Typography variant="h6" color="text.secondary" textAlign="center" sx={{ mb: 6, maxWidth: '600px', mx: 'auto' }}>
-            Advanced segment hunting features designed by competitive cyclists, for KOM chasers
+            Advanced route discovery features designed by cyclists, for adventure seekers
           </Typography>
           
           <Grid container spacing={4}>
@@ -221,8 +221,8 @@ const HomePage = () => {
               Ready to Claim Your Crowns?
             </Typography>
             <Typography variant="h6" sx={{ mb: 4, opacity: 0.9, lineHeight: 1.6 }}>
-              Join thousands of competitive cyclists who trust KOM-map for their segment hunting. 
-              Find, analyze, and conquer the best KOM opportunities with our AI-powered platform.
+              Join thousands of cyclists who trust Baroudeek for their route discovery. 
+              Find, analyze, and experience the best cycling adventures with our AI-powered platform.
             </Typography>
             <Stack direction="row" spacing={2} justifyContent="center">
               <Button 
@@ -237,7 +237,7 @@ const HomePage = () => {
                   fontWeight: 700
                 }}
               >
-                {isAuthenticated ? 'Start KOM Hunting' : 'Join KOM-map'}
+                {isAuthenticated ? 'Start Exploring' : 'Join Baroudeek'}
               </Button>
             </Stack>
           </Box>
