@@ -3,10 +3,10 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy.orm import Session
 from sqlalchemy import text
 from typing import List
+from datetime import datetime, timezone
 from app.db.database import get_db
 from app.schemas.route_simple import RouteCreateSimple, RouteUpdateSimple, RouteResponseSimple
 from app.core.security import verify_token
-# from app.api.routes.auth_simple import get_current_user_dependency  # Not needed
 import uuid
 import json
 
@@ -35,6 +35,7 @@ async def create_route(
     
     # Create route
     route_id = str(uuid.uuid4())
+    now = datetime.now(timezone.utc).isoformat()
     
     try:
         db.execute(text("""
@@ -47,7 +48,7 @@ async def create_route(
                 :id, :user_id, :name, :description, :distance, :estimated_time,
                 :difficulty, :road_quality_score, :safety_score, :is_public, :tags,
                 :view_count, :usage_count, :rating_avg, :rating_count, :waypoints,
-                :geometry, NOW()
+                :geometry, :created_at
             )
         """), {
             "id": route_id,
@@ -65,8 +66,9 @@ async def create_route(
             "usage_count": 0,
             "rating_avg": 0.0,
             "rating_count": 0,
-            "waypoints": json.dumps([wp.dict() for wp in route_data.waypoints]),
-            "geometry": route_data.geometry
+            "waypoints": json.dumps([wp.model_dump() for wp in route_data.waypoints]),
+            "geometry": route_data.geometry,
+            "created_at": now
         })
         db.commit()
         
@@ -90,7 +92,7 @@ async def create_route(
             usage_count=0,
             rating_avg=0.0,
             rating_count=0,
-            created_at=None,  # Will be set properly later
+            created_at=datetime.now(timezone.utc),
             geometry=route_data.geometry
         )
         
@@ -269,7 +271,8 @@ async def update_route(
             detail="No fields to update"
         )
     
-    update_fields.append("updated_at = NOW()")
+    update_fields.append("updated_at = :updated_at")
+    update_values["updated_at"] = datetime.now(timezone.utc).isoformat()
     
     try:
         db.execute(text(f"""

@@ -25,6 +25,8 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin, onSuccess 
     username: '',
     password: '',
     confirmPassword: '',
+    full_name: '',
+    bio: '',
   })
   const [formErrors, setFormErrors] = useState<Record<string, string>>({})
 
@@ -87,7 +89,9 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin, onSuccess 
     console.log('Registration form submitted with data:', {
       email: formData.email,
       username: formData.username,
-      password: formData.password
+      password: formData.password,
+      full_name: formData.full_name,
+      bio: formData.bio
     })
 
     try {
@@ -95,6 +99,8 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin, onSuccess 
         email: formData.email,
         username: formData.username,
         password: formData.password,
+        full_name: formData.full_name,
+        bio: formData.bio,
       }) as any).unwrap()
       console.log('Registration successful:', result)
       onSuccess?.()
@@ -122,10 +128,10 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin, onSuccess 
     >
       <Box sx={{ textAlign: 'center', mb: 2 }}>
         <Typography variant="h4" component="h1" gutterBottom>
-          Join CycleShare
+          Join Baroudique
         </Typography>
         <Typography variant="body1" color="text.secondary">
-          Create your account to start planning routes
+          Create your account to start your cycling adventures
         </Typography>
       </Box>
 
@@ -161,6 +167,28 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin, onSuccess 
         InputProps={{
           startAdornment: <AccountCircleOutlined sx={{ mr: 1, color: 'action.active' }} />,
         }}
+      />
+
+      <TextField
+        label="Full Name (Optional)"
+        type="text"
+        value={formData.full_name}
+        onChange={handleChange('full_name')}
+        fullWidth
+        InputProps={{
+          startAdornment: <PersonOutline sx={{ mr: 1, color: 'action.active' }} />,
+        }}
+      />
+
+      <TextField
+        label="Bio (Optional)"
+        type="text"
+        value={formData.bio}
+        onChange={handleChange('bio')}
+        multiline
+        rows={2}
+        fullWidth
+        placeholder="Tell us about your cycling interests..."
       />
 
       <TextField

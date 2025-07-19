@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { 
   Box, 
   Typography, 
@@ -15,16 +15,39 @@ import {
   TextField,
   Switch,
   FormControlLabel,
-  Alert
+  Alert,
+  Card,
+  CardContent,
+  Grid,
+  Chip,
+  LinearProgress,
+  Tooltip,
+  IconButton as MuiIconButton
 } from '@mui/material'
-import { DeleteOutlined, DragIndicatorOutlined, SaveOutlined } from '@mui/icons-material'
+import { 
+  DeleteOutlined, 
+  DragIndicatorOutlined, 
+  SaveOutlined, 
+  Speed,
+  AccessTime,
+  Terrain,
+  Traffic,
+  Star,
+  TrendingUp,
+  InfoOutlined,
+  Height
+} from '@mui/icons-material'
 import { useRoute } from '../contexts/RouteContext'
+import { useMapHighlight } from '../contexts/MapHighlightContext'
 import { useSelector } from 'react-redux'
 import { RootState } from '../store'
 import { routeAPI } from '../services/api'
+import ElevationProfile from './ElevationProfile'
+import { brandColors, brandGradients } from '../theme/brandColors'
 
 const RoutePanel = () => {
   const { waypoints, route, removeWaypoint } = useRoute()
+  const { setHighlightedSegment } = useMapHighlight()
   const { user } = useSelector((state: RootState) => state.auth)
   
   const [saveDialogOpen, setSaveDialogOpen] = useState(false)
@@ -35,6 +58,68 @@ const RoutePanel = () => {
   })
   const [saveError, setSaveError] = useState<string | null>(null)
   const [isSaving, setIsSaving] = useState(false)
+
+
+  // Helper function to get score explanations
+  const getScoreExplanation = (scoreType: string) => {
+    const explanations = {
+      surface: "Surface quality based on road type and condition:\n• Tarmac/asphalt: 90-100 points\n• Good concrete: 80-90 points\n• Poor surfaces: 40-70 points\n• Unpaved/gravel: 20-40 points",
+      traffic: "Traffic safety assessment:\n• Cycle lanes/paths: 90-100 points\n• Quiet residential: 80-90 points\n• Moderate traffic: 60-80 points\n• Busy roads: 20-60 points\n• Major highways: 0-20 points",
+      gradient: "Gradient suitability for cycling:\n• 0-3% grade: 90-100 points\n• 3-6% grade: 70-90 points\n• 6-10% grade: 40-70 points\n• 10-15% grade: 20-40 points\n• >15% grade: 0-20 points"
+    }
+    return explanations[scoreType as keyof typeof explanations] || "Score calculation details"
+  }
+
+  // Helper function to format gradient with max 2 decimal places
+  const formatGradient = (gradient: number) => {
+    return gradient % 1 === 0 ? gradient.toString() : gradient.toFixed(2)
+  }
+
+  // Calculate route's actual max gradient
+  const getRouteMaxGradient = () => {
+    if (!route?.elevation?.profile || route.elevation.profile.length < 2) {
+      return null
+    }
+    
+    let maxGradient = 0
+    let maxGradientIndex = 0
+    
+    // First check if grades are already calculated in the profile
+    const hasPreCalculatedGrades = route.elevation.profile.some(point => point.grade !== undefined)
+    
+    if (hasPreCalculatedGrades) {
+      // Use pre-calculated grades
+      route.elevation.profile.forEach((point, index) => {
+        if (point.grade !== undefined && Math.abs(point.grade) > Math.abs(maxGradient)) {
+          maxGradient = Math.abs(point.grade)
+          maxGradientIndex = index
+        }
+      })
+    } else {
+      // Calculate gradients from elevation points
+      for (let i = 1; i < route.elevation.profile.length; i++) {
+        const currentPoint = route.elevation.profile[i]
+        const previousPoint = route.elevation.profile[i - 1]
+        
+        const elevationDiff = currentPoint.elevation - previousPoint.elevation
+        const distanceDiff = currentPoint.distance - previousPoint.distance
+        
+        if (distanceDiff > 0) {
+          const gradient = Math.abs((elevationDiff / distanceDiff) * 100)
+          
+          if (gradient > maxGradient) {
+            maxGradient = gradient
+            maxGradientIndex = i
+          }
+        }
+      }
+    }
+    
+    return {
+      gradient: maxGradient,
+      segmentIndex: maxGradientIndex
+    }
+  }
 
   const formatDistance = (distance: number) => {
     if (distance >= 1000) {
@@ -115,84 +200,398 @@ const RoutePanel = () => {
   }
 
   return (
-    <Box sx={{ flex: 1 }}>
-      <Typography variant="subtitle1" gutterBottom>
-        Route Details
-      </Typography>
-      
-      {route && (
-        <Box sx={{ mb: 2 }}>
-          <Box sx={{ p: 2, backgroundColor: 'background.paper', borderRadius: 1, mb: 1 }}>
-            <Typography variant="body2" color="text.secondary">
-              Distance: {formatDistance(route.distance)}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Est. Time: {formatDuration(route.duration)}
-            </Typography>
-            {route.elevation.ascent > 0 && (
-              <Typography variant="body2" color="text.secondary">
-                Ascent: {route.elevation.ascent}m
+    <Box>
+      {route ? (
+        <>
+          {/* Route Quality Score - Prominent Display */}
+          <Card sx={{ 
+            mb: 3,
+            background: `linear-gradient(135deg, ${brandColors.primary}, ${brandColors.accent})`,
+            color: 'white',
+            border: `2px solid ${brandColors.accent}`
+          }}>
+            <CardContent sx={{ p: 3 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+                <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                  Route Quality Score
+                </Typography>
+                <Star sx={{ color: 'white' }} />
+              </Box>
+              
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+                <Typography variant="h2" sx={{ 
+                  fontWeight: 900,
+                  fontSize: '3rem',
+                  lineHeight: 1
+                }}>
+                  {route.quality?.overallScore || 85}
+                </Typography>
+                <Box sx={{ flex: 1 }}>
+                  <Typography variant="body1" sx={{ fontWeight: 600, opacity: 0.9 }}>
+                    {route.quality?.overallScore >= 90 ? 'Excellent' : 
+                     route.quality?.overallScore >= 80 ? 'Great' :
+                     route.quality?.overallScore >= 70 ? 'Good' : 'Fair'}
+                  </Typography>
+                  <Typography variant="caption" sx={{ opacity: 0.8 }}>
+                    Perfect cycling conditions
+                  </Typography>
+                </Box>
+              </Box>
+            </CardContent>
+          </Card>
+
+          {/* Route Stats Cards */}
+          <Grid container spacing={2} sx={{ mb: 3 }}>
+            <Grid item xs={4}>
+              <Card sx={{ 
+                background: 'rgba(255,255,255,0.05)',
+                border: '1px solid rgba(255,255,255,0.1)',
+                height: '100%'
+              }}>
+                <CardContent sx={{ p: 2 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                    <Speed sx={{ color: brandColors.accent, mr: 1, fontSize: '1.2rem' }} />
+                    <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase', fontWeight: 600 }}>
+                      Distance
+                    </Typography>
+                  </Box>
+                  <Typography variant="h6" sx={{ fontWeight: 700, color: 'white' }}>
+                    {formatDistance(route.distance)}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+            
+            <Grid item xs={4}>
+              <Card sx={{ 
+                background: 'rgba(255,255,255,0.05)',
+                border: '1px solid rgba(255,255,255,0.1)',
+                height: '100%'
+              }}>
+                <CardContent sx={{ p: 2 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                    <AccessTime sx={{ color: brandColors.accent, mr: 1, fontSize: '1.2rem' }} />
+                    <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase', fontWeight: 600 }}>
+                      Time
+                    </Typography>
+                  </Box>
+                  <Typography variant="h6" sx={{ fontWeight: 700, color: 'white' }}>
+                    {formatDuration(route.duration)}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+
+            <Grid item xs={4}>
+              <Card sx={{ 
+                background: 'rgba(255,255,255,0.05)',
+                border: '1px solid rgba(255,255,255,0.1)',
+                height: '100%'
+              }}>
+                <CardContent sx={{ p: 2 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                    <Height sx={{ color: brandColors.accent, mr: 1, fontSize: '1.2rem' }} />
+                    <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase', fontWeight: 600 }}>
+                      Max Grade
+                    </Typography>
+                  </Box>
+                  {getRouteMaxGradient() ? (
+                    <Tooltip 
+                      title="Hover to highlight this section on the route"
+                      arrow
+                      placement="top"
+                    >
+                      <Box component="span">
+                        <Typography 
+                          variant="h6" 
+                          sx={{ 
+                            fontWeight: 700, 
+                            color: 'white',
+                            cursor: 'pointer',
+                            '&:hover': {
+                              color: brandColors.accent,
+                              transform: 'scale(1.05)'
+                            },
+                            transition: 'all 0.2s ease'
+                          }}
+                          onMouseEnter={() => {
+                            const maxGrad = getRouteMaxGradient()
+                            if (maxGrad) setHighlightedSegment(maxGrad.segmentIndex)
+                          }}
+                          onMouseLeave={() => setHighlightedSegment(null)}
+                        >
+                          {`${formatGradient(getRouteMaxGradient()!.gradient)}%`}
+                        </Typography>
+                      </Box>
+                    </Tooltip>
+                  ) : (
+                    <Typography 
+                      variant="h6" 
+                      sx={{ 
+                        fontWeight: 700, 
+                        color: 'rgba(255,255,255,0.5)'
+                      }}
+                    >
+                      N/A
+                    </Typography>
+                  )}
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
+
+          {/* Quality Breakdown */}
+          {route.quality && (
+            <Card sx={{ 
+              mb: 3,
+              background: 'rgba(255,255,255,0.05)',
+              border: '1px solid rgba(255,255,255,0.1)'
+            }}>
+              <CardContent sx={{ p: 3 }}>
+                <Typography variant="h6" sx={{ color: 'white', fontWeight: 700, mb: 2 }}>
+                  Quality Breakdown
+                </Typography>
+                
+                <Box sx={{ mb: 2 }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      <Terrain sx={{ color: brandColors.accent, mr: 1, fontSize: '1rem' }} />
+                      <Typography variant="body2" sx={{ color: 'white' }}>Surface</Typography>
+                      <Tooltip 
+                        title={getScoreExplanation('surface')}
+                        arrow
+                        placement="top"
+                        sx={{ ml: 1 }}
+                      >
+                        <MuiIconButton size="small" sx={{ color: 'rgba(255,255,255,0.5)', p: 0.5 }}>
+                          <InfoOutlined sx={{ fontSize: '0.8rem' }} />
+                        </MuiIconButton>
+                      </Tooltip>
+                    </Box>
+                    <Typography variant="body2" sx={{ color: brandColors.accent, fontWeight: 600 }}>
+                      {route.quality.surfaceScore}%
+                    </Typography>
+                  </Box>
+                  <LinearProgress 
+                    variant="determinate" 
+                    value={route.quality.surfaceScore} 
+                    sx={{ 
+                      backgroundColor: 'rgba(255,255,255,0.1)',
+                      '& .MuiLinearProgress-bar': {
+                        backgroundColor: brandColors.accent
+                      }
+                    }}
+                  />
+                </Box>
+
+                <Box sx={{ mb: 2 }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      <Traffic sx={{ color: brandColors.accent, mr: 1, fontSize: '1rem' }} />
+                      <Typography variant="body2" sx={{ color: 'white' }}>Traffic</Typography>
+                      <Tooltip 
+                        title={getScoreExplanation('traffic')}
+                        arrow
+                        placement="top"
+                        sx={{ ml: 1 }}
+                      >
+                        <MuiIconButton size="small" sx={{ color: 'rgba(255,255,255,0.5)', p: 0.5 }}>
+                          <InfoOutlined sx={{ fontSize: '0.8rem' }} />
+                        </MuiIconButton>
+                      </Tooltip>
+                    </Box>
+                    <Typography variant="body2" sx={{ color: brandColors.accent, fontWeight: 600 }}>
+                      {route.quality.trafficScore}%
+                    </Typography>
+                  </Box>
+                  <LinearProgress 
+                    variant="determinate" 
+                    value={route.quality.trafficScore} 
+                    sx={{ 
+                      backgroundColor: 'rgba(255,255,255,0.1)',
+                      '& .MuiLinearProgress-bar': {
+                        backgroundColor: brandColors.accent
+                      }
+                    }}
+                  />
+                </Box>
+
+                <Box>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      <TrendingUp sx={{ color: brandColors.accent, mr: 1, fontSize: '1rem' }} />
+                      <Typography variant="body2" sx={{ color: 'white' }}>Gradient</Typography>
+                      <Tooltip 
+                        title={getScoreExplanation('gradient')}
+                        arrow
+                        placement="top"
+                        sx={{ ml: 1 }}
+                      >
+                        <MuiIconButton size="small" sx={{ color: 'rgba(255,255,255,0.5)', p: 0.5 }}>
+                          <InfoOutlined sx={{ fontSize: '0.8rem' }} />
+                        </MuiIconButton>
+                      </Tooltip>
+                    </Box>
+                    <Typography variant="body2" sx={{ color: brandColors.accent, fontWeight: 600 }}>
+                      {route.quality.gradientScore}%
+                    </Typography>
+                  </Box>
+                  <LinearProgress 
+                    variant="determinate" 
+                    value={route.quality.gradientScore} 
+                    sx={{ 
+                      backgroundColor: 'rgba(255,255,255,0.1)',
+                      '& .MuiLinearProgress-bar': {
+                        backgroundColor: brandColors.accent
+                      }
+                    }}
+                  />
+                </Box>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Elevation Profile */}
+          <Card sx={{ 
+            mb: 3,
+            background: 'rgba(255,255,255,0.05)',
+            border: '1px solid rgba(255,255,255,0.1)'
+          }}>
+            <CardContent sx={{ p: 3 }}>
+              <Typography variant="h6" sx={{ color: 'white', fontWeight: 700, mb: 2 }}>
+                Elevation Profile
               </Typography>
-            )}
-            {route.elevation.descent > 0 && (
-              <Typography variant="body2" color="text.secondary">
-                Descent: {route.elevation.descent}m
+              <ElevationProfile elevation={route.elevation} distance={route.distance} />
+            </CardContent>
+          </Card>
+
+          {/* Route Warnings */}
+          {route.warnings && route.warnings.length > 0 && (
+            <Alert 
+              severity="info" 
+              sx={{ 
+                mb: 2,
+                background: 'rgba(33, 150, 243, 0.1)',
+                border: '1px solid rgba(33, 150, 243, 0.3)',
+                color: 'white'
+              }}
+            >
+              <Typography variant="body2">
+                {route.warnings[0]}
               </Typography>
-            )}
-          </Box>
-          
+            </Alert>
+          )}
+
+          {/* Save Button */}
           <Button
             variant="contained"
             startIcon={<SaveOutlined />}
             onClick={handleOpenSaveDialog}
             fullWidth
-            sx={{ mb: 1 }}
+            sx={{
+              background: brandGradients.primary,
+              fontWeight: 600,
+              py: 1.5,
+              mb: 2,
+              '&:hover': {
+                background: brandGradients.primary,
+                transform: 'translateY(-2px)'
+              }
+            }}
           >
-            Save Route
+            Save This Route
           </Button>
-          
+
           {saveError && (
-            <Alert severity="error" sx={{ mb: 1 }}>
+            <Alert severity="error" sx={{ mb: 2 }}>
               {saveError}
             </Alert>
           )}
+        </>
+      ) : (
+        <Box sx={{ textAlign: 'center', py: 4 }}>
+          <Typography variant="h6" sx={{ color: 'rgba(255,255,255,0.7)', mb: 1 }}>
+            Plan Your Route
+          </Typography>
+          <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.5)' }}>
+            Click on the map to add waypoints and generate an intelligent route
+          </Typography>
         </Box>
       )}
-      
-      <Typography variant="subtitle2" gutterBottom>
-        Waypoints
-      </Typography>
-      
-      <List dense>
-        {waypoints.map((waypoint, index) => (
-          <Box key={waypoint.id}>
-            <ListItem
-              secondaryAction={
-                <IconButton 
-                  edge="end" 
-                  size="small"
-                  onClick={() => removeWaypoint(waypoint.id)}
-                >
-                  <DeleteOutlined />
-                </IconButton>
-              }
-            >
-              <IconButton edge="start" size="small">
-                <DragIndicatorOutlined />
-              </IconButton>
-              <ListItemText
-                primary={waypoint.address || `${index === 0 ? 'Start' : index === waypoints.length - 1 ? 'End' : `Waypoint ${index}`}`}
-                secondary={`${waypoint.lat.toFixed(4)}, ${waypoint.lng.toFixed(4)}`}
-              />
-            </ListItem>
-            {index < waypoints.length - 1 && <Divider />}
+
+      {/* Waypoints Section */}
+      <Box sx={{ 
+        borderTop: `1px solid rgba(255,255,255,0.1)`,
+        pt: 3,
+        mt: 3
+      }}>
+        <Typography variant="h6" sx={{ color: 'white', fontWeight: 700, mb: 2 }}>
+          Waypoints ({waypoints.length})
+        </Typography>
+        
+        {waypoints.length > 0 ? (
+          <List dense sx={{ 
+            background: 'rgba(255,255,255,0.05)',
+            borderRadius: 2,
+            border: '1px solid rgba(255,255,255,0.1)'
+          }}>
+            {waypoints.map((waypoint, index) => (
+              <Box key={waypoint.id}>
+                <ListItem sx={{ 
+                  '&:hover': { 
+                    background: 'rgba(255,255,255,0.1)' 
+                  }
+                }}>
+                  <IconButton edge="start" size="small" sx={{ color: brandColors.accent }}>
+                    <DragIndicatorOutlined />
+                  </IconButton>
+                  <ListItemText
+                    primary={
+                      <Typography variant="body2" sx={{ color: 'white', fontWeight: 500 }}>
+                        {waypoint.address || `${index === 0 ? 'Start' : index === waypoints.length - 1 ? 'End' : `Waypoint ${index}`}`}
+                      </Typography>
+                    }
+                    secondary={
+                      <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.5)' }}>
+                        {waypoint.lat.toFixed(4)}, {waypoint.lng.toFixed(4)}
+                      </Typography>
+                    }
+                  />
+                  <IconButton 
+                    edge="end" 
+                    size="small"
+                    onClick={() => removeWaypoint(waypoint.id)}
+                    sx={{ 
+                      color: 'rgba(255,255,255,0.5)',
+                      '&:hover': { color: '#ff5722' }
+                    }}
+                  >
+                    <DeleteOutlined />
+                  </IconButton>
+                </ListItem>
+                {index < waypoints.length - 1 && (
+                  <Divider sx={{ borderColor: 'rgba(255,255,255,0.1)' }} />
+                )}
+              </Box>
+            ))}
+          </List>
+        ) : (
+          <Box sx={{ 
+            textAlign: 'center', 
+            py: 3,
+            background: 'rgba(255,255,255,0.05)',
+            borderRadius: 2,
+            border: '1px solid rgba(255,255,255,0.1)'
+          }}>
+            <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.5)' }}>
+              No waypoints added yet
+            </Typography>
+            <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.4)' }}>
+              Click on the map to start planning
+            </Typography>
           </Box>
-        ))}
-      </List>
-      
-      <Typography variant="caption" color="text.secondary" sx={{ mt: 1 }}>
-        Click on map to add waypoints
-      </Typography>
+        )}
+      </Box>
 
       {/* Save Route Dialog */}
       <Dialog open={saveDialogOpen} onClose={handleCloseSaveDialog} maxWidth="sm" fullWidth>

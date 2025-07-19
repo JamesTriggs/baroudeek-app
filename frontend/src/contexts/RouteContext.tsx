@@ -1,11 +1,17 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react'
-import { routingService, RouteResponse } from '../services/routingService'
+import { routingService } from '../services/routingService'
 
 interface Waypoint {
   id: string
   lat: number
   lng: number
   address?: string
+}
+
+interface ElevationPoint {
+  distance: number
+  elevation: number
+  grade?: number
 }
 
 interface RouteInfo {
@@ -15,7 +21,23 @@ interface RouteInfo {
   elevation: {
     ascent: number
     descent: number
+    maxElevation: number
+    minElevation: number
+    profile: ElevationPoint[]
   }
+  quality: {
+    surfaceScore: number
+    trafficScore: number
+    overallScore: number
+  }
+  warnings: string[]
+}
+
+interface RouteOptions {
+  profile?: string
+  avoidBusyRoads?: boolean
+  preferSmoothSurface?: boolean
+  maxGradient?: number
 }
 
 interface RouteContextType {
@@ -23,9 +45,9 @@ interface RouteContextType {
   route: RouteInfo | null
   isLoading: boolean
   error: string | null
-  addWaypoint: (lat: number, lng: number) => void
+  addWaypoint: (lat: number, lng: number) => Promise<void>
   removeWaypoint: (id: string) => void
-  generateRoute: () => Promise<void>
+  generateRoute: (options?: RouteOptions) => Promise<void>
   clearRoute: () => void
 }
 
@@ -37,35 +59,70 @@ export const RouteProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const addWaypoint = (lat: number, lng: number) => {
+  const addWaypoint = async (lat: number, lng: number) => {
+    // Try to get a readable address using reverse geocoding
+    let address = `${lat.toFixed(4)}, ${lng.toFixed(4)}`
+    
+    try {
+      const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`)
+      if (response.ok) {
+        const data = await response.json()
+        if (data.display_name) {
+          // Extract a readable short address
+          const parts = data.display_name.split(', ')
+          address = parts.slice(0, 3).join(', ') || address
+        }
+      }
+    } catch (error) {
+      console.log('Geocoding failed, using coordinates:', error)
+    }
+    
     const newWaypoint: Waypoint = {
       id: Date.now().toString(),
       lat,
       lng,
-      address: `${lat.toFixed(4)}, ${lng.toFixed(4)}`
+      address
     }
-    setWaypoints(prev => [...prev, newWaypoint])
+    setWaypoints(prev => {
+      const updated = [...prev, newWaypoint]
+      // Auto-generate route when we have 2+ waypoints
+      if (updated.length >= 2) {
+        setTimeout(() => generateRouteForWaypoints(updated), 100)
+      }
+      return updated
+    })
   }
 
   const removeWaypoint = (id: string) => {
-    setWaypoints(prev => prev.filter(wp => wp.id !== id))
-    setRoute(null) // Clear route when waypoints change
+    setWaypoints(prev => {
+      const updated = prev.filter(wp => wp.id !== id)
+      // Auto-generate route for remaining waypoints if we still have 2+
+      if (updated.length >= 2) {
+        setTimeout(() => generateRouteForWaypoints(updated), 100)
+      } else {
+        setRoute(null) // Clear route when we have fewer than 2 waypoints
+      }
+      return updated
+    })
   }
 
-  const generateRoute = async () => {
-    console.log('Generating route with waypoints:', waypoints)
-    if (waypoints.length < 2) {
-      alert('Please add at least 2 waypoints to generate a route')
-      return
-    }
+  const generateRouteForWaypoints = async (waypointsToUse: Waypoint[], options?: RouteOptions) => {
+    if (waypointsToUse.length < 2) return
     
     setIsLoading(true)
     setError(null)
     
     try {
-      const routeResponse = await routingService.getRoute(waypoints)
+      const profile = options?.profile || 'cycling-regular'
+      const preferences = {
+        avoidBusyRoads: options?.avoidBusyRoads,
+        preferSmoothSurface: options?.preferSmoothSurface,
+        maxGradient: options?.maxGradient,
+        routeType: 'balanced' as const
+      }
+      const routeResponse = await routingService.getRoute(waypointsToUse, profile, preferences)
       setRoute(routeResponse)
-      console.log('Route generated:', routeResponse)
+      console.log('Route generated with profile:', profile, routeResponse)
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to generate route'
       setError(errorMessage)
@@ -73,6 +130,16 @@ export const RouteProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     } finally {
       setIsLoading(false)
     }
+  }
+
+  const generateRoute = async (options?: RouteOptions) => {
+    console.log('Manually generating route with waypoints:', waypoints, 'options:', options)
+    if (waypoints.length < 2) {
+      setError('Please add at least 2 waypoints to generate a route')
+      return
+    }
+    
+    await generateRouteForWaypoints(waypoints, options)
   }
 
   const clearRoute = () => {

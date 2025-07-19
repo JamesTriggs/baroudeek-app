@@ -1,0 +1,79 @@
+BAROUDEEK MIDJOURNEY ASSET PROMPTS
+=====================================
+
+Brand Colors:
+- Primary: #047857 (Deep emerald)
+- Secondary: #065f46 (Darker emerald) 
+- Accent: #10b981 (Bright emerald)
+- Light: #34d399 (Light emerald)
+- Surface: #064e3b (Dark emerald surface)
+
+=====================================
+
+1. HERO SECTION BACKGROUND
+--------------------------
+Breathtaking ultra-wide cinematic landscape photograph of a serpentine mountain road cutting through ancient emerald forest, professional road cyclist in premium carbon fiber bike gear riding in the far distance creating sense of scale and adventure, dramatic golden hour lighting with warm sunbeams filtering through morning mist, deep sophisticated emerald green color palette with hex codes #047857 and #10b981 naturally integrated into the foliage and lighting, atmospheric depth with multiple mountain ridges fading into misty distance, premium adventure photography aesthetic reminiscent of high-end cycling magazine covers, shot with Sony A7R5 mirrorless camera using 24-70mm f/2.8 lens, ultra-sharp detail, rich color grading, professional color correction, cinematic composition with rule of thirds, tarmac road surface perfectly smooth and inviting, subtle lens flare, natural vignetting, photorealistic rendering with hyperdetailed textures on asphalt, tree bark, and distant cyclist silhouette --ar 32:9 --v 6 --style raw --s 750
+
+2. ROUTE INTELLIGENCE VISUALIZATION
+-----------------------------------
+Sophisticated holographic route planning interface floating in three-dimensional space against deep emerald gradient background transitioning from #064e3b to #047857, glowing neon-green GPS trail lines forming complex cycling route with elevation changes, multiple floating data visualization panels showing speed analytics graphs charts and surface quality metrics, modern UI elements with clean sans-serif typography, sophisticated emerald green gradients #047857 to #10b981 creating depth and hierarchy, tech-forward design language inspired by premium automotive navigation systems, clean minimalist aesthetic with subtle particle effects, professional product photography studio lighting with rim lighting on floating elements, glass-like transparency effects on data panels, hyperdetailed interface elements with crisp vector graphics, futuristic but approachable technology visualization, commercial grade CGI rendering quality --ar 16:9 --v 6 --style raw --s 850
+
+3. SURFACE QUALITY ANALYSIS TECHNICAL ILLUSTRATION
+--------------------------------------------------
+Highly detailed isometric technical cross-section illustration of premium road surface construction showing multiple asphalt layers from base to surface, sophisticated emerald green highlight accents #10b981 illuminating the perfect top layer, clean vector illustration style with precise line weights and professional technical drawing aesthetics, cutaway view revealing aggregate base course subbase and subgrade layers, premium materials visualization with realistic textures, sophisticated emerald color palette #047857 #065f46 #10b981 used strategically for highlighting and depth, professional architectural drafting aesthetic, clean white background with subtle drop shadow, high level of technical detail showing grain structure of asphalt, engineering diagram quality with dimensional annotations, modern industrial design illustration style, sharp vector graphics with anti-aliased edges, suitable for premium brand presentation materials --ar 1:1 --v 6 --style raw --s 900
+
+4. COMMUNITY ATHLETES PHOTOGRAPHY
+---------------------------------
+Professional lifestyle photography of diverse group of accomplished road cyclists in premium cycling kit, emerald green jersey accent details and subtle brand elements, dynamic action poses suggesting movement and athleticism without motion blur, clean white infinity curve studio background with professional three-point lighting setup, modern fitness brand aesthetic reminiscent of Nike and Lululemon campaigns, commercial photography quality shot with Phase One medium format camera and 80mm lens, confident expressions showing determination and joy, range of ages from 25-45 representing serious recreational cyclists, premium carbon fiber bikes with aerodynamic wheel sets, sophisticated emerald green color coordination #047857 #10b981 integrated naturally into cycling kit design, sharp focus throughout with excellent depth control, professional retouching and color grading, aspirational but authentic athletic portraiture, diverse representation including different ethnicities and genders, studio strobes with large softboxes creating even illumination --ar 16:9 --v 6 --style raw --s 800
+
+5. PREMIUM APP INTERFACE MOCKUP
+-------------------------------
+Hyperrealistic product photography of latest iPhone Pro displaying sophisticated cycling route planning application interface, emerald green UI elements using exact brand colors #047857 #065f46 #10b981, elegant dark theme interface with premium typography and careful information hierarchy, detailed route planning screen showing elevation profile data and surface quality analysis, sophisticated app design with subtle glassmorphism effects and carefully crafted icon set, floating elegantly above emerald gradient background transitioning from deep forest green to bright accent green, professional product photography setup with controlled studio lighting and subtle reflections, phone positioned at perfect three-quarter angle for optimal screen visibility, hyperdetailed interface elements with pixel-perfect rendering, commercial grade CGI quality with realistic materials and lighting, subtle depth of field with sharp focus on screen content, premium brand presentation aesthetic suitable for app store screenshots and marketing materials --ar 9:16 --v 6 --style raw --s 900
+
+6. BRAND PATTERN DESIGN
+-----------------------
+Sophisticated seamless repeating pattern inspired by bicycle tire tread patterns and topographical map contour lines, monochromatic emerald green design using brand colors #047857 #065f46 #10b981 in subtle tonal variations, minimal abstract geometric shapes suggesting movement and precision, premium brand aesthetic suitable for luxury cycling brand applications, corporate elegance with subtle texture variations creating visual interest without overwhelming, clean vector graphics with mathematical precision in pattern repeat, sophisticated use of negative space and visual rhythm, inspired by high-end automotive and aerospace branding patterns, suitable for various brand applications from packaging to digital backgrounds, professional brand identity design quality, scalable vector format maintaining crispness at any size, subtle gradient transitions between pattern elements, modern minimalist aesthetic with timeless appeal --ar 1:1 --v 6 --style raw --tile --s 850
+
+7. DATA VISUALIZATION DASHBOARD
+-------------------------------
+Beautiful sophisticated data visualization dashboard showing mountain elevation profile analysis, emerald green gradient fill transitioning from #10b981 at peaks to deeper #047857 in valleys, clean modern line chart design with subtle grid system and professional typography, multiple data streams including gradient analysis speed recommendations and surface quality metrics, sophisticated UI elements with careful attention to visual hierarchy and spacing, dark background #0a0a0a providing strong contrast for emerald accents, glowing data points and interactive elements suggesting premium software interface, high-tech data visualization aesthetic inspired by Tesla and premium automotive displays, professional dashboard design with clean information architecture, subtle animation suggestions through glowing elements and gradient transitions, commercial grade interface design suitable for premium software applications, hyperdetailed typography and iconography, sophisticated color palette creating calm professional atmosphere --ar 21:9 --v 6 --style raw --s 900
+
+8. QUALITY CERTIFICATION BADGE
+------------------------------
+Premium metallic certification badge design featuring emerald green shield shape with gold accent details, "95% Surface Accuracy Certified" text in sophisticated serif typography, luxury brand aesthetic inspired by Swiss watch and automotive premium badges, sophisticated emblem style with detailed metallic textures and realistic lighting effects, professional quality seal design with subtle embossing effects and dimensional depth, emerald green enamel finish #047857 with polished gold trim elements, clean white background with subtle drop shadow for professional presentation, commercial grade 3D rendering with hyperrealistic materials including brushed metal and enamel surfaces, suitable for digital and print applications, luxury brand positioning with timeless design appeal, precise attention to typography kerning and visual balance, professional certification design standards --ar 1:1 --v 6 --style raw --s 950
+
+9. ROAD INTELLIGENCE FACTOR TILES
+----------------------------------
+
+9A. SURFACE QUALITY TILE BACKGROUND
+-----------------------------------
+Ultra-detailed macro photograph of perfect premium asphalt surface with subtle texture visible, shot from low angle with dramatic lighting creating depth and dimension, emerald green #047857 accent lighting highlighting the smooth tarmac texture, professional automotive photography aesthetic with shallow depth of field, dark gradient background transitioning to transparent for text overlay compatibility, subtle particle effects suggesting quality and precision, hyperrealistic material photography shot with Sony macro lens, commercial grade surface texture visualization, sophisticated lighting setup with rim lighting, clean composition suitable for UI background with 60% opacity text overlay area, premium road construction photography aesthetic --ar 16:10 --v 6 --style raw --s 800
+
+9B. TRAFFIC INTELLIGENCE TILE BACKGROUND  
+----------------------------------------
+Sophisticated aerial view of modern highway intersection at golden hour with minimal traffic flow, clean geometric road patterns creating visual interest, subtle emerald green #10b981 accent lighting on road markings and signs, professional architectural photography aesthetic with perfect symmetry, dark gradient edges fading to allow text readability, minimal visual noise with focus on clean infrastructure lines, commercial drone photography quality shot with DJI Inspire, sophisticated urban planning visualization, premium transportation design aesthetic, subtle motion blur on few vehicles suggesting intelligent traffic flow, suitable for UI background with text overlay compatibility --ar 16:10 --v 6 --style raw --s 850
+
+9C. GRADIENT OPTIMIZATION TILE BACKGROUND
+-----------------------------------------
+Dramatic mountain landscape silhouette with elevation profile suggested through layered mountain ridges, sophisticated emerald green #047857 gradient transitioning through the peaks and valleys, minimal abstract geometric interpretation of elevation data, clean vector-style mountain silhouettes with subtle texture, dark background perfect for text overlay readability, professional data visualization aesthetic meets landscape photography, sophisticated gradient transitions creating depth, suitable for dashboard UI backgrounds, premium outdoor adventure brand aesthetic, subtle particle effects suggesting precision and calculation, mathematical beauty in natural forms --ar 16:10 --v 6 --style raw --s 900
+
+9D. INFRASTRUCTURE TILE BACKGROUND
+----------------------------------
+Clean architectural photograph of modern cycle lane infrastructure with perfect road markings, sophisticated emerald green #10b981 highlights on bike lane symbols and directional indicators, minimal geometric composition with strong leading lines, professional urban planning photography aesthetic, dark gradient background ensuring text readability, subtle lighting creating depth and dimension, commercial infrastructure photography quality, clean modernist design with focus on cyclist-friendly infrastructure elements, sophisticated composition suitable for UI background overlay, premium municipal design aesthetic, sharp details on road surface and markings --ar 16:10 --v 6 --style raw --s 850
+
+9E. SCENIC VALUE TILE BACKGROUND
+--------------------------------
+Ethereal forest canopy photograph shot from below looking up through emerald green leaves, natural emerald color palette #047857 #10b981 perfectly integrated into the foliage, soft dappled lighting creating magical atmosphere, abstract natural pattern with organic geometry, dark background areas perfect for text overlay, professional nature photography aesthetic with shallow depth of field, sophisticated botanical photography meets minimalist design, subtle particle effects suggesting natural beauty and tranquility, commercial environmental photography quality, clean composition suitable for UI background applications, premium outdoor lifestyle brand aesthetic --ar 16:10 --v 6 --style raw --s 800
+
+=====================================
+
+USAGE NOTES:
+- Always include specific brand hex codes in prompts
+- Use "emerald green" terminology consistently
+- Reference "sophisticated" and "premium" for brand positioning
+- Include technical photography details for realism
+- Specify aspect ratios for intended usage
+- Use --style raw for photorealistic results
+- Add --s values between 750-950 for quality control
+
+=====================================

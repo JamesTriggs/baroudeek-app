@@ -6,10 +6,19 @@ interface User {
   id: string
   email: string
   username: string
+  full_name?: string
+  bio?: string
   preferences: {
-    avoidBusyRoads: boolean
-    preferSmoothSurface: boolean
-    maxGradient: number
+    avoid_busy_roads: boolean
+    prefer_smooth_surface: boolean
+    max_gradient: number
+    route_type: string
+  }
+  stats: {
+    total_routes: number
+    total_distance: number
+    contribution_points: number
+    ratings_given: number
   }
 }
 
@@ -38,7 +47,7 @@ export const login = createAsyncThunk(
 
 export const register = createAsyncThunk(
   'auth/register',
-  async (userData: { email: string; username: string; password: string }) => {
+  async (userData: { email: string; username: string; password: string; full_name?: string; bio?: string }) => {
     const response = await authAPI.register(userData)
     tokenUtils.setToken(response.access_token)
     return response

@@ -1,0 +1,22 @@
+/* Current location marker styles */
+.current-location-marker {
+  background: transparent !important;
+  border: none !important;
+}
+
+/* Pulsing animation for current location */
+.current-location-marker div {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(33, 150, 243, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(33, 150, 243, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(33, 150, 243, 0);
+  }
+}

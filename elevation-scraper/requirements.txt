@@ -1,0 +1,6 @@
+aiohttp>=3.8.0
+asyncio
+sqlite3
+gzip
+pathlib
+dataclasses

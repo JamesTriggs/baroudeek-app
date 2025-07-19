@@ -47,7 +47,7 @@ export const authAPI = {
     return response.data
   },
   
-  register: async (userData: { email: string; username: string; password: string }) => {
+  register: async (userData: { email: string; username: string; password: string; full_name?: string; bio?: string }) => {
     console.log('API: Making registration request to /auth/register with:', userData)
     const response = await api.post('/auth/register', userData)
     console.log('API: Registration response:', response.data)

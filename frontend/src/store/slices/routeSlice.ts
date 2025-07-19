@@ -10,14 +10,24 @@ interface Waypoint {
 
 interface Route {
   id: string
+  user_id: string
   name: string
+  description?: string
   waypoints: Waypoint[]
   distance: number
-  estimatedTime: number
+  estimated_time: number
   difficulty: 'easy' | 'moderate' | 'hard'
-  roadQualityScore: number
-  createdAt: string
-  updatedAt: string
+  road_quality_score: number
+  safety_score: number
+  is_public: boolean
+  tags: string[]
+  view_count: number
+  usage_count: number
+  rating_avg: number
+  rating_count: number
+  geometry?: string
+  created_at: string
+  updated_at?: string
 }
 
 interface RouteState {
@@ -38,7 +48,16 @@ const initialState: RouteState = {
 
 export const createRoute = createAsyncThunk(
   'route/create',
-  async (routeData: { name: string; waypoints: Waypoint[] }) => {
+  async (routeData: {
+    name: string
+    description?: string
+    waypoints: Waypoint[]
+    distance: number
+    estimated_time: number
+    difficulty?: string
+    is_public?: boolean
+    geometry?: string
+  }) => {
     const response = await routeAPI.createRoute(routeData)
     return response
   }
@@ -46,7 +65,14 @@ export const createRoute = createAsyncThunk(
 
 export const updateRoute = createAsyncThunk(
   'route/update',
-  async ({ id, updates }: { id: string; updates: Partial<Route> }) => {
+  async ({ id, updates }: { 
+    id: string
+    updates: {
+      name?: string
+      description?: string
+      is_public?: boolean
+    }
+  }) => {
     const response = await routeAPI.updateRoute(id, updates)
     return response
   }
@@ -119,14 +145,50 @@ const routeSlice = createSlice({
         state.isLoading = false
         state.error = action.error.message || 'Failed to create route'
       })
+      .addCase(fetchRoutes.pending, (state) => {
+        state.isLoading = true
+        state.error = null
+      })
       .addCase(fetchRoutes.fulfilled, (state, action) => {
+        state.isLoading = false
         state.routes = action.payload
       })
+      .addCase(fetchRoutes.rejected, (state, action) => {
+        state.isLoading = false
+        state.error = action.error.message || 'Failed to fetch routes'
+      })
+      .addCase(updateRoute.pending, (state) => {
+        state.isLoading = true
+        state.error = null
+      })
+      .addCase(updateRoute.fulfilled, (state, action) => {
+        state.isLoading = false
+        const index = state.routes.findIndex(route => route.id === action.payload.id)
+        if (index !== -1) {
+          state.routes[index] = action.payload
+        }
+        if (state.currentRoute?.id === action.payload.id) {
+          state.currentRoute = action.payload
+        }
+      })
+      .addCase(updateRoute.rejected, (state, action) => {
+        state.isLoading = false
+        state.error = action.error.message || 'Failed to update route'
+      })
+      .addCase(deleteRoute.pending, (state) => {
+        state.isLoading = true
+        state.error = null
+      })
       .addCase(deleteRoute.fulfilled, (state, action) => {
+        state.isLoading = false
         state.routes = state.routes.filter(route => route.id !== action.payload)
         if (state.currentRoute?.id === action.payload) {
           state.currentRoute = null
         }
+      })
+      .addCase(deleteRoute.rejected, (state, action) => {
+        state.isLoading = false
+        state.error = action.error.message || 'Failed to delete route'
       })
   },
 })

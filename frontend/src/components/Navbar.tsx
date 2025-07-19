@@ -10,19 +10,19 @@ import {
   MenuItem, 
   Divider,
   IconButton,
-  Chip,
-  Fab
+  Chip
 } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import { RootState } from '../store'
+import { RootState, AppDispatch } from '../store'
 import { logout } from '../store/slices/authSlice'
-import { PedalBike, AccountCircle, ExitToApp, RouteOutlined, EmojiEventsOutlined } from '@mui/icons-material'
+import { AccountCircle, ExitToApp, RouteOutlined, EmojiEventsOutlined } from '@mui/icons-material'
 import { AuthDialog } from './auth'
+import { brandColors, brandGradients } from '../theme/brandColors'
 
 const Navbar = () => {
   const navigate = useNavigate()
-  const dispatch = useDispatch()
+  const dispatch = useDispatch<AppDispatch>()
   const { user, token } = useSelector((state: RootState) => state.auth)
   
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
@@ -71,25 +71,43 @@ const Navbar = () => {
 
   return (
     <>
-      <AppBar position="static" elevation={0}>
+      <AppBar 
+        position="static" 
+        elevation={0}
+        sx={{
+          background: '#0a0a0a',
+          borderBottom: `1px solid rgba(255,255,255,0.1)`
+        }}
+      >
         <Toolbar sx={{ py: 1 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', mr: 3 }}>
-            <EmojiEventsOutlined sx={{ mr: 1.5, fontSize: '2rem', color: '#FFD700' }} />
             <Typography
               variant="h5"
               component="div"
               sx={{ 
                 cursor: 'pointer',
-                fontWeight: 700,
-                background: 'linear-gradient(135deg, #006B6B 0%, #4DB6AC 100%)',
+                fontWeight: 800,
+                background: `linear-gradient(45deg, ${brandColors.accent}, ${brandColors.light})`,
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
-                letterSpacing: '-0.01em'
+                letterSpacing: '-0.01em',
+                mr: 1
               }}
               onClick={() => navigate('/')}
             >
-              Baroudeek
+              Baroudique
             </Typography>
+            <Chip 
+              label="BETA" 
+              size="small"
+              sx={{ 
+                backgroundColor: brandColors.accent, 
+                color: 'white',
+                fontWeight: 'bold',
+                fontSize: '0.6rem',
+                height: '18px'
+              }} 
+            />
           </Box>
           
           <Box sx={{ flexGrow: 1 }} />
@@ -101,15 +119,15 @@ const Navbar = () => {
                   startIcon={<RouteOutlined />}
                   onClick={handleNavigateToPlanner}
                   sx={{ 
-                    color: 'text.primary',
+                    color: 'white',
                     fontWeight: 600,
                     '&:hover': { 
-                      bgcolor: 'rgba(0, 107, 107, 0.08)',
+                      bgcolor: `${brandColors.accent}20`,
                       transform: 'translateY(-1px)'
                     }
                   }}
                 >
-                  Route Explorer
+                  Route Planner
                 </Button>
                 
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
@@ -117,11 +135,11 @@ const Navbar = () => {
                     label={user.username}
                     variant="outlined"
                     sx={{ 
-                      borderColor: 'primary.main',
-                      color: 'primary.main',
+                      borderColor: brandColors.accent,
+                      color: brandColors.accent,
                       fontWeight: 600,
                       '&:hover': { 
-                        bgcolor: 'rgba(0, 107, 107, 0.08)',
+                        bgcolor: `${brandColors.accent}20`,
                         transform: 'translateY(-1px)'
                       }
                     }}
@@ -138,9 +156,9 @@ const Navbar = () => {
                     <Avatar sx={{ 
                       width: 36, 
                       height: 36, 
-                      bgcolor: 'primary.main',
+                      bgcolor: brandColors.accent,
                       fontWeight: 600,
-                      boxShadow: '0 4px 12px rgba(0, 107, 107, 0.3)'
+                      boxShadow: `0 4px 12px ${brandColors.accent}50`
                     }}>
                       {user.username.charAt(0).toUpperCase()}
                     </Avatar>
@@ -155,9 +173,11 @@ const Navbar = () => {
                     sx: { 
                       minWidth: 200,
                       borderRadius: 3,
-                      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.12)',
-                      border: '1px solid rgba(0, 0, 0, 0.04)',
-                      mt: 1
+                      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      mt: 1,
+                      background: '#111111',
+                      color: 'white'
                     }
                   }}
                   transformOrigin={{ horizontal: 'right', vertical: 'top' }}
@@ -167,25 +187,27 @@ const Navbar = () => {
                     onClick={handleNavigateToProfile}
                     sx={{ 
                       py: 1.5,
+                      color: 'white',
                       '&:hover': { 
-                        bgcolor: 'rgba(0, 107, 107, 0.08)'
+                        bgcolor: `${brandColors.accent}20`
                       }
                     }}
                   >
-                    <AccountCircle sx={{ mr: 2, color: 'primary.main' }} />
+                    <AccountCircle sx={{ mr: 2, color: brandColors.accent }} />
                     Profile
                   </MenuItem>
-                  <Divider />
+                  <Divider sx={{ borderColor: 'rgba(255,255,255,0.1)' }} />
                   <MenuItem 
                     onClick={handleLogout}
                     sx={{ 
                       py: 1.5,
+                      color: 'white',
                       '&:hover': { 
-                        bgcolor: 'rgba(255, 87, 34, 0.08)'
+                        bgcolor: 'rgba(255, 87, 34, 0.2)'
                       }
                     }}
                   >
-                    <ExitToApp sx={{ mr: 2, color: 'secondary.main' }} />
+                    <ExitToApp sx={{ mr: 2, color: '#ff5722' }} />
                     Logout
                   </MenuItem>
                 </Menu>
@@ -195,10 +217,10 @@ const Navbar = () => {
                 <Button 
                   onClick={handleLogin}
                   sx={{ 
-                    color: 'text.primary',
+                    color: 'white',
                     fontWeight: 600,
                     '&:hover': { 
-                      bgcolor: 'rgba(0, 107, 107, 0.08)',
+                      bgcolor: `${brandColors.accent}20`,
                       transform: 'translateY(-1px)'
                     }
                   }}
@@ -209,11 +231,16 @@ const Navbar = () => {
                   variant="contained"
                   onClick={handleRegister}
                   sx={{ 
+                    background: brandGradients.primary,
                     fontWeight: 600,
-                    px: 3
+                    px: 3,
+                    '&:hover': {
+                      background: brandGradients.primary,
+                      transform: 'translateY(-1px)'
+                    }
                   }}
                 >
-                  Sign Up
+                  Get Beta Access
                 </Button>
               </>
             )}

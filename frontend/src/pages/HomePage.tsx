@@ -1,8 +1,11 @@
+import React from 'react'
 import { Box, Typography, Button, Container, Grid, Card, CardContent, Stack, Chip, Fab } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { RootState } from '../store'
-import { RouteOutlined, GroupOutlined, TrendingUpOutlined, NavigationOutlined, SpeedOutlined, SecurityOutlined } from '@mui/icons-material'
+import { RouteOutlined, GroupOutlined, TrendingUpOutlined, NavigationOutlined, ArrowForward, Speed } from '@mui/icons-material'
+import { brandColors, brandGradients, brandShadows } from '../theme/brandColors'
+import HealthStatus from '../components/HealthStatus'
 
 const HomePage = () => {
   const navigate = useNavigate()
@@ -38,169 +41,317 @@ const HomePage = () => {
   ]
 
   return (
-    <Box sx={{ overflow: 'hidden' }}>
+    <Box sx={{ 
+      background: '#0a0a0a',
+      color: 'white',
+      minHeight: '100vh',
+      overflow: 'hidden'
+    }}>
       {/* Hero Section */}
-      <Box 
-        sx={{ 
-          background: 'linear-gradient(135deg, rgba(0, 107, 107, 0.05) 0%, rgba(77, 182, 172, 0.05) 100%)',
-          py: { xs: 8, md: 12 },
-          position: 'relative',
-          '&::before': {
-            content: '""',
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: 'radial-gradient(circle at 20% 80%, rgba(0, 188, 212, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(255, 87, 34, 0.1) 0%, transparent 50%)',
-            pointerEvents: 'none',
-          }
-        }}
-      >
-        <Container maxWidth="lg">
-          <Box sx={{ textAlign: 'center', position: 'relative', zIndex: 1 }}>
-            <Stack direction="row" spacing={1} justifyContent="center" sx={{ mb: 3 }}>
-              <Chip 
-                label="🚴 New" 
-                color="primary" 
-                variant="outlined"
+      <Box sx={{ position: 'relative', minHeight: '80vh' }}>
+        {/* Hero Background Pattern */}
+        <Box sx={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundImage: `linear-gradient(rgba(10,10,10,0.8), rgba(10,10,10,0.9)), url('/assets/brand-pattern.png')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center center',
+          backgroundRepeat: 'no-repeat',
+          filter: 'brightness(0.7) contrast(1.1)',
+        }} />
+
+        <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 2 }}>
+          <Box sx={{ pt: { xs: 8, md: 12 }, pb: { xs: 6, md: 8 } }}>
+            
+            {/* Logo */}
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 6 }}>
+              <Typography 
+                variant="h4" 
                 sx={{ 
-                  fontWeight: 600,
-                  '&:hover': { transform: 'translateY(-2px)' }
-                }}
-              />
-              <Chip 
-                label="AI-Powered" 
-                color="info" 
-                variant="outlined"
-                sx={{ 
-                  fontWeight: 600,
-                  '&:hover': { transform: 'translateY(-2px)' }
-                }}
-              />
-            </Stack>
-            
-            <Typography 
-              variant="h1" 
-              component="h1" 
-              gutterBottom
-              sx={{ 
-                background: 'linear-gradient(135deg, #006B6B 0%, #4DB6AC 50%, #00BCD4 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                mb: 2
-              }}
-            >
-              Baroudeek
-            </Typography>
-            
-            <Typography variant="h4" color="text.secondary" sx={{ mb: 1, fontWeight: 400 }}>
-              Your Cycling Adventure Command Center
-            </Typography>
-            
-            <Typography variant="h6" color="text.secondary" sx={{ mb: 6, maxWidth: '600px', mx: 'auto', lineHeight: 1.6 }}>
-              Discover, plan, and experience cycling routes with the ultimate adventure platform built for cyclists
-            </Typography>
-            
-            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} justifyContent="center">
-              <Button
-                variant="contained"
-                size="large"
-                onClick={() => navigate(isAuthenticated ? '/planner' : '/register')}
-                sx={{ 
-                  py: 2,
-                  px: 4,
-                  fontSize: '1.1rem',
-                  minWidth: 180
+                  fontWeight: 800,
+                  background: `linear-gradient(45deg, ${brandColors.accent}, ${brandColors.light})`,
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  mr: 2
                 }}
               >
-                {isAuthenticated ? 'Start Exploring' : 'Get Started Free'}
-              </Button>
-              {!isAuthenticated && (
+                Baroudique
+              </Typography>
+              <Chip 
+                label="BETA" 
+                size="small"
+                sx={{ 
+                  backgroundColor: brandColors.accent, 
+                  color: 'white',
+                  fontWeight: 'bold',
+                  fontSize: '0.7rem'
+                }} 
+              />
+            </Box>
+
+            <Box sx={{ textAlign: 'center' }}>
+              {/* Hero Content */}
+              <Typography 
+                variant="h1" 
+                sx={{ 
+                  fontSize: { xs: '2.5rem', md: '3.5rem' },
+                  fontWeight: 900,
+                  lineHeight: 1.1,
+                  mb: 3,
+                  background: 'linear-gradient(45deg, #ffffff, #cccccc)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent'
+                }}
+              >
+                Start planning better routes
+              </Typography>
+
+              <Typography 
+                variant="h5" 
+                sx={{ 
+                  fontSize: { xs: '1.2rem', md: '1.5rem' },
+                  fontWeight: 400,
+                  mb: 4,
+                  opacity: 0.8,
+                  lineHeight: 1.4,
+                  maxWidth: '600px',
+                  mx: 'auto'
+                }}
+              >
+                Access the route intelligence that's revolutionizing cycling
+              </Typography>
+
+              {/* Primary CTA */}
+              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={3} justifyContent="center" sx={{ mb: 6 }}>
                 <Button
-                  variant="outlined"
+                  variant="contained"
                   size="large"
-                  onClick={() => navigate('/login')}
-                  sx={{ 
-                    py: 2,
-                    px: 4,
-                    fontSize: '1.1rem',
-                    minWidth: 180
+                  onClick={() => navigate(isAuthenticated ? '/planner' : '/register')}
+                  sx={{
+                    background: brandGradients.primary,
+                    color: 'white',
+                    fontWeight: 'bold',
+                    px: 6,
+                    py: 2.5,
+                    fontSize: '1.2rem',
+                    textTransform: 'none',
+                    boxShadow: brandShadows.primary,
+                    position: 'relative',
+                    overflow: 'hidden',
+                    '&:hover': {
+                      transform: 'translateY(-3px)',
+                      boxShadow: brandShadows.primaryHover
+                    },
+                    '&::before': {
+                      content: '""',
+                      position: 'absolute',
+                      top: 0,
+                      left: '-100%',
+                      width: '100%',
+                      height: '100%',
+                      background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)',
+                      transition: 'left 0.5s',
+                    },
+                    '&:hover::before': {
+                      left: '100%'
+                    },
+                    transition: 'all 0.3s ease'
                   }}
+                  endIcon={<ArrowForward />}
                 >
-                  Sign In
+                  {isAuthenticated ? 'Start Planning Routes' : 'Get Beta Access'}
                 </Button>
+                
+                {!isAuthenticated && (
+                  <Button
+                    variant="outlined"
+                    size="large"
+                    onClick={() => navigate('/login')}
+                    sx={{
+                      borderColor: brandColors.accent,
+                      color: brandColors.accent,
+                      px: 4,
+                      py: 2.5,
+                      fontSize: '1rem',
+                      textTransform: 'none',
+                      '&:hover': {
+                        borderColor: brandColors.light,
+                        color: brandColors.light,
+                        backgroundColor: `${brandColors.accent}10`
+                      }
+                    }}
+                  >
+                    Sign In
+                  </Button>
+                )}
+              </Stack>
+
+              {/* Status Indicators */}
+              {!isAuthenticated && (
+                <Stack direction={{ xs: 'column', md: 'row' }} spacing={4} justifyContent="center" sx={{ 
+                  opacity: 0.9,
+                  background: 'rgba(16,185,129,0.1)',
+                  p: 3,
+                  border: `1px solid ${brandColors.accent}`,
+                  borderLeft: `4px solid ${brandColors.accent}`,
+                  maxWidth: 600,
+                  mx: 'auto'
+                }}>
+                  <Box sx={{ textAlign: 'center' }}>
+                    <Typography variant="h6" sx={{ fontWeight: 'bold', color: brandColors.accent }}>
+                      Free Beta Access
+                    </Typography>
+                    <Typography variant="body2" sx={{ opacity: 0.8 }}>
+                      No credit card required
+                    </Typography>
+                  </Box>
+                  <Box sx={{ textAlign: 'center' }}>
+                    <Typography variant="h6" sx={{ fontWeight: 'bold', color: brandColors.accent }}>
+                      847 Spots Left
+                    </Typography>
+                    <Typography variant="body2" sx={{ opacity: 0.8 }}>
+                      Limited time offer
+                    </Typography>
+                  </Box>
+                </Stack>
               )}
-            </Stack>
+            </Box>
           </Box>
         </Container>
       </Box>
 
       {/* Stats Section */}
-      <Container maxWidth="lg" sx={{ py: 8 }}>
-        <Grid container spacing={3}>
-          {stats.map((stat, index) => (
-            <Grid item xs={6} md={3} key={index}>
-              <Card sx={{ 
-                textAlign: 'center', 
-                py: 3,
-                background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.6) 100%)',
-                backdropFilter: 'blur(12px)',
-                border: '1px solid rgba(0, 0, 0, 0.06)',
-              }}>
-                <CardContent>
-                  <Typography variant="h3" component="div" color="primary.main" fontWeight={700}>
+      <Box sx={{ py: { xs: 4, md: 6 }, backgroundColor: '#111111' }}>
+        <Container maxWidth="lg">
+          <Box sx={{ textAlign: 'center', mb: 4 }}>
+            <Typography variant="h3" sx={{ fontWeight: 900, mb: 2, color: 'white' }}>
+              Join the revolution
+            </Typography>
+            <Typography variant="subtitle1" sx={{ opacity: 0.7, color: 'white' }}>
+              Cyclists are already discovering better routes
+            </Typography>
+          </Box>
+          
+          <Grid container spacing={3}>
+            {stats.map((stat, index) => (
+              <Grid item xs={6} md={3} key={index}>
+                <Box sx={{ 
+                  textAlign: 'center',
+                  p: 3,
+                  background: 'rgba(255,255,255,0.05)',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                  borderRadius: 2,
+                  transition: 'all 0.3s ease',
+                  '&:hover': {
+                    border: `1px solid ${brandColors.accent}`,
+                    transform: 'translateY(-4px)',
+                    background: 'rgba(16,185,129,0.1)'
+                  }
+                }}>
+                  <Typography variant="h3" sx={{ 
+                    color: brandColors.accent, 
+                    fontWeight: 900,
+                    mb: 1
+                  }}>
                     {stat.value}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary" fontWeight={500}>
+                  <Typography variant="body2" sx={{ 
+                    color: 'white', 
+                    opacity: 0.8,
+                    fontWeight: 500
+                  }}>
                     {stat.label}
                   </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
-      </Container>
+                </Box>
+              </Grid>
+            ))}
+          </Grid>
+        </Container>
+      </Box>
 
       {/* Features Section */}
-      <Box sx={{ py: 8, bgcolor: 'background.default' }}>
+      <Box sx={{ py: { xs: 4, md: 6 }, backgroundColor: '#0a0a0a' }}>
         <Container maxWidth="lg">
-          <Typography variant="h2" component="h2" textAlign="center" gutterBottom>
-            Why Choose Baroudeek?
-          </Typography>
-          <Typography variant="h6" color="text.secondary" textAlign="center" sx={{ mb: 6, maxWidth: '600px', mx: 'auto' }}>
-            Advanced route discovery features designed by cyclists, for adventure seekers
-          </Typography>
+          <Box sx={{ textAlign: 'center', mb: 6 }}>
+            <Typography variant="h2" sx={{ fontWeight: 900, mb: 2, color: 'white' }}>
+              Built for serious cyclists
+            </Typography>
+            <Typography variant="h6" sx={{ opacity: 0.7, maxWidth: '600px', mx: 'auto', color: 'white' }}>
+              Advanced features that actually matter for route planning
+            </Typography>
+          </Box>
           
           <Grid container spacing={4}>
             {features.map((feature, index) => (
               <Grid item xs={12} md={4} key={index}>
-                <Card sx={{ 
-                  height: '100%', 
+                <Box sx={{
+                  position: 'relative',
+                  background: `linear-gradient(135deg, rgba(4,120,87,0.1), rgba(16,185,129,0.1))`,
+                  border: '1px solid rgba(255,255,255,0.2)',
+                  borderRadius: 3,
+                  p: 4,
+                  height: '280px',
+                  color: 'white',
                   textAlign: 'center',
-                  p: 1,
-                  background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.6) 100%)',
-                  backdropFilter: 'blur(12px)',
-                  border: '1px solid rgba(0, 0, 0, 0.06)',
+                  overflow: 'hidden',
+                  transition: 'all 0.3s ease',
+                  '&:hover': {
+                    border: `2px solid ${brandColors.accent}`,
+                    transform: 'translateY(-8px)',
+                    background: `linear-gradient(135deg, rgba(4,120,87,0.15), rgba(16,185,129,0.15))`
+                  },
+                  '&::before': {
+                    content: '""',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    background: `linear-gradient(135deg, ${brandColors.primary}33, ${brandColors.accent}22)`,
+                    opacity: 0.2,
+                    transition: 'opacity 0.3s ease',
+                    zIndex: 1
+                  }
                 }}>
-                  <CardContent sx={{ p: 4 }}>
-                    <Box sx={{ 
+                  <Box sx={{ position: 'relative', zIndex: 2 }}>
+                    {/* Icon */}
+                    <Box sx={{
                       mb: 3,
                       p: 2,
-                      borderRadius: 3,
-                      display: 'inline-block',
-                      bgcolor: `${feature.color}15`,
+                      borderRadius: '50%',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      background: `rgba(4,120,87,0.3)`,
+                      border: `2px solid ${brandColors.accent}`
                     }}>
-                      {feature.icon}
+                      {React.cloneElement(feature.icon, {
+                        sx: { fontSize: 32, color: brandColors.accent }
+                      })}
                     </Box>
-                    <Typography variant="h5" component="h3" gutterBottom fontWeight={600}>
+                    
+                    {/* Title */}
+                    <Typography variant="h5" sx={{ 
+                      fontWeight: 'bold', 
+                      mb: 2, 
+                      color: 'white' 
+                    }}>
                       {feature.title}
                     </Typography>
-                    <Typography variant="body1" color="text.secondary" lineHeight={1.6}>
+
+                    {/* Description */}
+                    <Typography variant="body1" sx={{ 
+                      opacity: 0.8, 
+                      color: 'white',
+                      lineHeight: 1.5
+                    }}>
                       {feature.description}
                     </Typography>
-                  </CardContent>
-                </Card>
+                  </Box>
+                </Box>
               </Grid>
             ))}
           </Grid>
@@ -209,77 +360,93 @@ const HomePage = () => {
 
       {/* CTA Section */}
       <Box sx={{ 
-        py: 8,
-        background: 'linear-gradient(135deg, #006B6B 0%, #4DB6AC 100%)',
-        color: 'white',
-        position: 'relative',
-        overflow: 'hidden'
+        py: { xs: 4, md: 6 },
+        background: `linear-gradient(135deg, ${brandColors.primary}, ${brandColors.accent})`,
+        textAlign: 'center'
       }}>
-        <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
-          <Box sx={{ textAlign: 'center', maxWidth: '800px', mx: 'auto' }}>
-            <Typography variant="h2" component="h2" gutterBottom fontWeight={700}>
-              Ready to Claim Your Crowns?
-            </Typography>
-            <Typography variant="h6" sx={{ mb: 4, opacity: 0.9, lineHeight: 1.6 }}>
-              Join thousands of cyclists who trust Baroudeek for their route discovery. 
-              Find, analyze, and experience the best cycling adventures with our AI-powered platform.
-            </Typography>
-            <Stack direction="row" spacing={2} justifyContent="center">
-              <Button 
-                variant="contained" 
-                color="secondary" 
-                size="large"
-                onClick={() => navigate(isAuthenticated ? '/planner' : '/register')}
-                sx={{ 
-                  py: 2,
-                  px: 4,
-                  fontSize: '1.1rem',
-                  fontWeight: 700
-                }}
-              >
-                {isAuthenticated ? 'Start Exploring' : 'Join Baroudeek'}
-              </Button>
-            </Stack>
-          </Box>
+        <Container maxWidth="md">
+          <Typography variant="h3" sx={{ fontWeight: 900, mb: 2, color: 'white' }}>
+            Ready to start planning?
+          </Typography>
+          
+          <Typography variant="subtitle1" sx={{ mb: 4, opacity: 0.9, color: 'white' }}>
+            Join cyclists who are already discovering better routes with intelligent planning.
+          </Typography>
+
+          <Button
+            variant="contained"
+            size="large"
+            onClick={() => navigate(isAuthenticated ? '/planner' : '/register')}
+            sx={{
+              backgroundColor: 'white',
+              color: brandColors.primary,
+              fontWeight: 'bold',
+              px: 6,
+              py: 2.5,
+              fontSize: '1.2rem',
+              textTransform: 'none',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.2)',
+              position: 'relative',
+              overflow: 'hidden',
+              '&:hover': {
+                backgroundColor: '#f5f5f5',
+                transform: 'translateY(-4px)',
+                boxShadow: '0 16px 48px rgba(0,0,0,0.4)'
+              },
+              '&::before': {
+                content: '""',
+                position: 'absolute',
+                top: 0,
+                left: '-100%',
+                width: '100%',
+                height: '100%',
+                background: `linear-gradient(90deg, transparent, ${brandColors.accent}33, transparent)`,
+                transition: 'left 0.6s',
+              },
+              '&:hover::before': {
+                left: '100%'
+              },
+              transition: 'all 0.3s ease'
+            }}
+            endIcon={<Speed />}
+          >
+            {isAuthenticated ? 'Start Planning Routes' : 'Get Beta Access'}
+          </Button>
+
+          <Typography variant="body2" sx={{ mt: 3, opacity: 0.9, color: 'white', fontWeight: 500 }}>
+            {isAuthenticated ? 'Access all route intelligence features' : 'Free forever for first 1,000 users'}
+          </Typography>
         </Container>
-        
-        {/* Decorative elements */}
-        <Box sx={{ 
-          position: 'absolute',
-          top: '10%',
-          left: '10%',
-          width: '100px',
-          height: '100px',
-          borderRadius: '50%',
-          bgcolor: 'rgba(255, 255, 255, 0.1)',
-          animation: 'float 6s ease-in-out infinite'
-        }} />
-        <Box sx={{ 
-          position: 'absolute',
-          bottom: '20%',
-          right: '15%',
-          width: '60px',
-          height: '60px',
-          borderRadius: '50%',
-          bgcolor: 'rgba(255, 255, 255, 0.1)',
-          animation: 'float 8s ease-in-out infinite reverse'
-        }} />
       </Box>
 
       {/* Floating Action Button */}
       {isAuthenticated && (
         <Fab 
-          color="primary" 
           onClick={() => navigate('/planner')}
           sx={{ 
             position: 'fixed',
             bottom: 32,
             right: 32,
-            zIndex: 1000
+            zIndex: 1000,
+            background: brandGradients.primary,
+            color: 'white',
+            boxShadow: brandShadows.primary,
+            '&:hover': {
+              background: brandGradients.primary,
+              transform: 'scale(1.1)',
+              boxShadow: brandShadows.primaryHover
+            }
           }}
         >
           <NavigationOutlined />
         </Fab>
+      )}
+      
+      {/* System Health Status for debugging */}
+      {process.env.NODE_ENV === 'development' && (
+        <Container maxWidth="lg" sx={{ py: 4 }}>
+          <HealthStatus showDetails />
+        </Container>
       )}
     </Box>
   )

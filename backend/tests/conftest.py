@@ -40,8 +40,11 @@ def db_session(db_engine):
     """Create a fresh database session for each test."""
     # Create tables and clean them for each test
     with db_engine.connect() as connection:
-        # Drop and recreate table to ensure clean state
+        # Drop and recreate tables to ensure clean state
+        connection.execute(text("DROP TABLE IF EXISTS routes"))
         connection.execute(text("DROP TABLE IF EXISTS users"))
+        
+        # Create users table
         connection.execute(text("""
             CREATE TABLE users (
                 id TEXT PRIMARY KEY,
@@ -61,6 +64,34 @@ def db_session(db_engine):
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                 updated_at DATETIME,
                 last_active DATETIME DEFAULT CURRENT_TIMESTAMP
+            )
+        """))
+        
+        # Create routes table
+        connection.execute(text("""
+            CREATE TABLE routes (
+                id TEXT PRIMARY KEY,
+                name TEXT NOT NULL,
+                description TEXT,
+                user_id TEXT NOT NULL,
+                geometry TEXT,
+                distance REAL NOT NULL,
+                estimated_time INTEGER NOT NULL,
+                difficulty TEXT NOT NULL,
+                road_quality_score REAL DEFAULT 0.0,
+                safety_score REAL DEFAULT 0.0,
+                elevation_data TEXT,
+                is_public BOOLEAN DEFAULT TRUE,
+                is_featured BOOLEAN DEFAULT FALSE,
+                tags TEXT DEFAULT '[]',
+                view_count INTEGER DEFAULT 0,
+                usage_count INTEGER DEFAULT 0,
+                rating_avg REAL DEFAULT 0.0,
+                rating_count INTEGER DEFAULT 0,
+                waypoints TEXT DEFAULT '[]',
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                updated_at DATETIME,
+                FOREIGN KEY (user_id) REFERENCES users (id)
             )
         """))
         connection.commit()
