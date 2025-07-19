@@ -6,7 +6,8 @@ from app.db.database import get_db
 from app.schemas.user import UserCreate, UserLogin, Token, UserResponse, UserStats
 from app.core.security import verify_password, get_password_hash, create_access_token, verify_token
 import uuid
-from datetime import datetime
+import json
+from datetime import datetime, timezone
 
 router = APIRouter()
 security = HTTPBearer()
@@ -34,6 +35,7 @@ async def register(user_data: UserCreate, db: Session = Depends(get_db)):
     print("Creating new user...")
     hashed_password = get_password_hash(user_data.password)
     user_id = str(uuid.uuid4())
+    now = datetime.now(timezone.utc).isoformat()
     
     try:
         db.execute(text("""
@@ -44,7 +46,7 @@ async def register(user_data: UserCreate, db: Session = Depends(get_db)):
             ) VALUES (
                 :id, :email, :username, :hashed_password, :is_active, :full_name, :bio,
                 :preferences, :total_routes, :total_distance, :contribution_points,
-                :ratings_given, NOW(), NOW()
+                :ratings_given, :created_at, :last_active
             )
         """), {
             "id": user_id,
@@ -58,7 +60,9 @@ async def register(user_data: UserCreate, db: Session = Depends(get_db)):
             "total_routes": 0,
             "total_distance": 0,
             "contribution_points": 0,
-            "ratings_given": 0
+            "ratings_given": 0,
+            "created_at": now,
+            "last_active": now
         })
         db.commit()
         print(f"User created successfully with ID: {user_id}")
@@ -88,7 +92,7 @@ async def register(user_data: UserCreate, db: Session = Depends(get_db)):
                 contribution_points=0,
                 ratings_given=0
             ),
-            created_at=datetime.utcnow()
+            created_at=datetime.now(timezone.utc)
         )
     )
 
@@ -136,14 +140,14 @@ async def login(user_credentials: UserLogin, db: Session = Depends(get_db)):
             username=user.username,
             full_name=user.full_name,
             bio=user.bio,
-            preferences=user.preferences if user.preferences else {},
+            preferences=json.loads(user.preferences) if user.preferences else {},
             stats=UserStats(
                 total_routes=user.total_routes,
                 total_distance=user.total_distance,
                 contribution_points=user.contribution_points,
                 ratings_given=user.ratings_given
             ),
-            created_at=datetime.utcnow()
+            created_at=datetime.now(timezone.utc)
         )
     )
 
@@ -156,7 +160,7 @@ async def get_current_user(
     
     user = db.execute(text("""
         SELECT id, email, username, full_name, bio, preferences, 
-               total_routes, total_distance, contribution_points, ratings_given
+               total_routes, total_distance, contribution_points, ratings_given, created_at
         FROM users 
         WHERE email = :email
     """), {"email": token_data["sub"]}).fetchone()
@@ -173,14 +177,14 @@ async def get_current_user(
         username=user.username,
         full_name=user.full_name,
         bio=user.bio,
-        preferences=user.preferences if user.preferences else {},
+        preferences=json.loads(user.preferences) if user.preferences else {},
         stats=UserStats(
             total_routes=user.total_routes,
             total_distance=user.total_distance,
             contribution_points=user.contribution_points,
             ratings_given=user.ratings_given
         ),
-        created_at=None  # Will be set properly later
+        created_at=datetime.now(timezone.utc)  # Use current time as fallback
     )
 
 @router.post("/logout")
